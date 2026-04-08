@@ -38,20 +38,9 @@
     <input id="fecha" type="date" class="fecha">
 
     <div class="cats">
-      <button onclick="setCat('Nevera',this)">
-        <i data-lucide="package"></i>
-        <span>Nevera</span>
-      </button>
-
-      <button onclick="setCat('Congelador',this)">
-        <i data-lucide="snowflake"></i>
-        <span>Congelador</span>
-      </button>
-
-      <button onclick="setCat('Despensa',this)">
-        <i data-lucide="archive"></i>
-        <span>Despensa</span>
-      </button>
+      <button onclick="setCat('Nevera',this)">Nevera</button>
+      <button onclick="setCat('Congelador',this)">Congelador</button>
+      <button onclick="setCat('Despensa',this)">Despensa</button>
     </div>
 
     <button class="btn" onclick="addItem()">Guardar</button>
@@ -63,40 +52,10 @@
 <div id="openModal" class="modal hidden">
   <div class="modal-content" onclick="event.stopPropagation()">
 
-    <h3>Abrir alimento</h3>
+    <h3>Abrir</h3>
     <input id="diasAbierto" type="number" placeholder="Días hasta caducar">
 
     <button class="btn" onclick="confirmOpen()">Confirmar</button>
-
-  </div>
-</div>
-
-<!-- MODAL EDITAR -->
-<div id="editModal" class="modal hidden">
-  <div class="modal-content edit-box" onclick="event.stopPropagation()">
-
-    <h3>Editar alimento</h3>
-
-    <input id="editNombre" placeholder="Nombre">
-
-    <div class="row">
-      <input id="editQty" type="number" min="1">
-      <div class="qty-buttons">
-        <button onclick="editQty.value++">+</button>
-        <button onclick="editQty.value = Math.max(1, editQty.value-1)">-</button>
-      </div>
-    </div>
-
-    <div id="editFechaContainer">
-      <input id="editFecha" type="date">
-    </div>
-
-    <div id="editDiasContainer" style="display:none;">
-      <input id="editDias" type="number" placeholder="Días hasta caducar">
-    </div>
-
-    <button class="btn" onclick="toggleEstado()">Cambiar estado</button>
-    <button class="btn" onclick="saveEdit()">Guardar</button>
 
   </div>
 </div>

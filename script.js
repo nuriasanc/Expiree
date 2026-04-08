@@ -1,39 +1,31 @@
 let items = JSON.parse(localStorage.getItem("items")) || [];
 let categoria = "Despensa";
-
 let openIndex = null;
-let editIndex = null;
 
-/* ELEMENTOS */
 const modalEl = document.getElementById("modal");
 const openModalEl = document.getElementById("openModal");
-const editModalEl = document.getElementById("editModal");
 
+/* cerrar modales al hacer click fuera */
 modalEl.onclick = () => modalEl.classList.add("hidden");
 openModalEl.onclick = () => openModalEl.classList.add("hidden");
-editModalEl.onclick = () => editModalEl.classList.add("hidden");
 
-/* ABRIR MODAL CREAR */
+/* abrir modal crear */
 function openModal() {
   modalEl.classList.remove("hidden");
 }
 
-/* CATEGORÍA */
+/* categoría */
 function setCat(c, el) {
   categoria = c;
-  document.querySelectorAll(".cats button").forEach(b => b.classList.remove("active"));
-  el.classList.add("active");
 }
 
-/* GUARDAR */
+/* guardar local */
 function guardar() {
   localStorage.setItem("items", JSON.stringify(items));
 }
 
-/* AÑADIR */
+/* añadir */
 function addItem() {
-
-  if (!nombre.value.trim()) return alert("Nombre obligatorio");
 
   items.push({
     nombre: nombre.value,
@@ -53,12 +45,13 @@ function addItem() {
   qty.value = 1;
 }
 
-/* ABRIR */
+/* abrir modal abrir */
 function openOpenModal(i) {
   openIndex = i;
   openModalEl.classList.remove("hidden");
 }
 
+/* confirmar abrir */
 function confirmOpen() {
 
   let d = parseInt(diasAbierto.value);
@@ -76,59 +69,10 @@ function confirmOpen() {
   openModalEl.classList.add("hidden");
 }
 
-/* EDITAR */
-function openEditModal(i) {
-
-  editIndex = i;
-  let item = items[i];
-
-  editNombre.value = item.nombre;
-  editQty.value = item.cantidad;
-
-  if (item.abierto) {
-    editFechaContainer.style.display = "none";
-    editDiasContainer.style.display = "block";
-  } else {
-    editFechaContainer.style.display = "block";
-    editDiasContainer.style.display = "none";
-    editFecha.value = item.fecha || "";
-  }
-
-  editModalEl.classList.remove("hidden");
-}
-
-function toggleEstado() {
-  items[editIndex].abierto = !items[editIndex].abierto;
-  openEditModal(editIndex);
-}
-
-function saveEdit() {
-
-  let item = items[editIndex];
-
-  item.nombre = editNombre.value;
-  item.cantidad = editQty.value;
-
-  if (item.abierto) {
-    let d = parseInt(editDias.value);
-    if (d) {
-      let f = new Date();
-      f.setDate(f.getDate() + d);
-      item.fecha = f.toISOString().split("T")[0];
-    }
-  } else {
-    item.fecha = editFecha.value;
-  }
-
-  guardar();
-  render();
-  editModalEl.classList.add("hidden");
-}
-
-/* DÍAS */
-function dias(f) {
-  if (!f) return 9999;
-  return Math.ceil((new Date(f) - new Date()) / 86400000);
+/* días restantes */
+function dias(fecha) {
+  if (!fecha) return 9999;
+  return Math.ceil((new Date(fecha) - new Date()) / 86400000);
 }
 
 /* RENDER */
@@ -136,71 +80,53 @@ function render() {
 
   lista.innerHTML = "";
 
-  items.forEach((item,i)=>{
+  let ordenados = [...items].sort((a, b) => {
 
-    let d = dias(item.fecha);
+    if (a.abierto !== b.abierto) {
+      return b.abierto - a.abierto; // abiertos primero
+    }
 
-    let div = document.createElement("div");
-    div.className = "item";
+    let da = a.fecha ? new Date(a.fecha) : new Date(9999,1,1);
+    let db = b.fecha ? new Date(b.fecha) : new Date(9999,1,1);
 
-    div.innerHTML = `
-      <div class="bg-left">Abrir</div>
-      <div class="bg-right">Eliminar</div>
+    return da - db;
+  });
 
-      <div class="content">
-        <b>${item.nombre}</b>
-        <div>Cant: ${item.cantidad} · ${item.abierto ? "Abierto" : "Cerrado"}</div>
-        <div>${item.fecha ? `Caduca en ${d} días` : ""}</div>
-      </div>
-    `;
+  ["Nevera","Congelador","Despensa"].forEach(cat => {
 
-    let startX = 0;
-    let rawX = 0;
+    let grupo = ordenados.filter(i => i.categoria === cat);
 
-    let pressTimer;
-    let longPress = false;
+    if (!grupo.length) return;
 
-    div.addEventListener("touchstart", e=>{
-      startX = e.touches[0].clientX;
-      longPress = false;
+    let titulo = document.createElement("h3");
+    titulo.textContent = cat;
+    lista.appendChild(titulo);
 
-      pressTimer = setTimeout(()=>{
-        longPress = true;
-        openEditModal(i);
-      }, 500);
+    grupo.forEach(item => {
+
+      let i = items.indexOf(item);
+
+      let d = dias(item.fecha);
+
+      let div = document.createElement("div");
+      div.className = "item";
+
+      if (d <= 5) div.classList.add("rojo");
+
+      div.innerHTML = `
+        <div class="content">
+          <b>${item.nombre}</b>
+          <div>Cant: ${item.cantidad}</div>
+          <div>${item.abierto ? "Abierto" : "Cerrado"}</div>
+          <div>${item.fecha ? `Caduca en ${d} días` : ""}</div>
+        </div>
+      `;
+
+      div.onclick = () => openOpenModal(i);
+
+      lista.appendChild(div);
     });
 
-    div.addEventListener("touchmove", e=>{
-      rawX = e.touches[0].clientX - startX;
-
-      if (Math.abs(rawX) > 10) clearTimeout(pressTimer);
-
-      let move = rawX * 0.6;
-
-      div.querySelector(".content").style.transform = `translateX(${move}px)`;
-      div.querySelector(".bg-left").style.opacity = move > 30 ? 1 : 0;
-      div.querySelector(".bg-right").style.opacity = move < -30 ? 1 : 0;
-    });
-
-    div.addEventListener("touchend", ()=>{
-
-      clearTimeout(pressTimer);
-
-      if (longPress) return;
-
-      if (rawX < -80) {
-        items.splice(i,1);
-      }
-
-      if (rawX > 80) {
-        openOpenModal(i);
-      }
-
-      guardar();
-      render();
-    });
-
-    lista.appendChild(div);
   });
 
   lucide.createIcons();
