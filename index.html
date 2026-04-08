@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#007aff">
+
+  <title>Despensa Pro</title>
+
+  <!-- PWA -->
+  <meta name="theme-color" content="#007aff">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f2f2f7;
+      transition: 0.3s;
+    }
+
+    body.dark {
+      background: #1c1c1e;
+      color: white;
+    }
+
+    .app {
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      margin-bottom: 15px;
+      color: black;
+    }
+
+    body.dark .card {
+      background: #2c2c2e;
+      color: white;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      border-radius: 14px;
+      border: none;
+      background: #007aff;
+      color: white;
+      font-weight: bold;
+    }
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-radius: 16px;
+      background: white;
+      margin-bottom: 10px;
+      transition: 0.2s;
+      position: relative;
+    }
+
+    body.dark .item {
+      background: #2c2c2e;
+    }
+
+    .item.expired { border-left: 5px solid red; }
+    .item.soon { border-left: 5px solid orange; }
+
+    .info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .name { font-weight: bold; }
+    .date { font-size: 13px; color: gray; }
+
+    .actions button {
+      background: red;
+      padding: 8px;
+      border-radius: 10px;
+      font-size: 12px;
+    }
+
+    .search {
+      margin-bottom: 10px;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <h1>🥫 Despensa</h1>
+
+  <div class="card">
+    <input id="nombre" placeholder="Alimento">
+    <input id="fecha" type="date">
+    <select id="categoria">
+      <option value="">Categoría</option>
+      <option value="Nevera">🧊 Nevera</option>
+      <option value="Congelador">❄️ Congelador</option>
+      <option value="Despensa">🥫 Despensa</option>
+    </select>
+    <button onclick="addItem()">Añadir</button>
+  </div>
+
+  <input class="search" id="buscar" placeholder="🔍 Buscar" oninput="render()">
+
+  <div id="lista"></div>
+</div>
+
+<script>
+let items = JSON.parse(localStorage.getItem("items")) || [];
+
+function guardar() {
+  localStorage.setItem("items", JSON.stringify(items));
+}
+
+function addItem() {
+  const nombre = document.getElementById("nombre").value;
+  const fecha = document.getElementById("fecha").value;
+  const categoria = document.getElementById("categoria").value;
+
+  if (!nombre || !fecha) return;
+
+  items.push({ nombre, fecha, categoria });
+  guardar();
+  render();
+}
+
+function eliminar(index) {
+  items.splice(index, 1);
+  guardar();
+  render();
+}
+
+function editar(index) {
+  const nuevo = prompt("Nuevo nombre:", items[index].nombre);
+  if (nuevo) {
+    items[index].nombre = nuevo;
+    guardar();
+    render();
+  }
+}
+
+function dias(fecha) {
+  const hoy = new Date();
+  return Math.ceil((new Date(fecha) - hoy) / (1000*60*60*24));
+}
+
+function render() {
+  const lista = document.getElementById("lista");
+  const filtro = document.getElementById("buscar").value.toLowerCase();
+
+  lista.innerHTML = "";
+
+  items
+    .filter(i => i.nombre.toLowerCase().includes(filtro))
+    .sort((a,b) => new Date(a.fecha) - new Date(b.fecha))
+    .forEach((item, index) => {
+      const d = dias(item.fecha);
+
+      const div = document.createElement("div");
+      div.className = "item";
+
+      if (d < 0) div.classList.add("expired");
+      else if (d <= 3) div.classList.add("soon");
+
+      div.innerHTML = `
+        <div class="info">
+          <div class="name">${item.nombre}</div>
+          <div class="date">${item.categoria || ""} · ${d} días</div>
+        </div>
+        <div class="actions">
+          <button onclick="editar(${index})">✏️</button>
+          <button onclick="eliminar(${index})">🗑️</button>
+        </div>
+      `;
+
+      // swipe delete
+      let startX = 0;
+      div.addEventListener("touchstart", e => startX = e.touches[0].clientX);
+      div.addEventListener("touchend", e => {
+        let endX = e.changedTouches[0].clientX;
+        if (startX - endX > 80) eliminar(index);
+      });
+
+      lista.appendChild(div);
+    });
+}
+
+// Dark mode automático
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.body.classList.add('dark');
+}
+
+// Notificación básica
+if ("Notification" in window) {
+  Notification.requestPermission();
+}
+
+function notificar() {
+  items.forEach(item => {
+    const d = dias(item.fecha);
+    if (d === 1) {
+      new Notification("⚠️ Caduca mañana: " + item.nombre);
+    }
+  });
+}
+
+setInterval(notificar, 60000);
+
+render();
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js')
+    .then(() => console.log("SW registrado"))
+    .catch(err => console.log("Error SW", err));
+}
+</script>
+
+</body>
+</html>
