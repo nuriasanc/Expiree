@@ -103,18 +103,20 @@ function render() {
 
     let startX = 0;
     let currentX = 0;
+    let rawX = 0;
 
     div.addEventListener("touchstart", e=>{
       startX = e.touches[0].clientX;
       currentX = 0;
+      rawX = 0;
     });
 
     div.addEventListener("touchmove", e=>{
 
-      let raw = e.touches[0].clientX - startX;
+      rawX = e.touches[0].clientX - startX;
 
       // ✨ resistencia tipo iOS
-      currentX = raw * 0.6;
+      currentX = rawX * 0.6;
 
       div.querySelector(".content").style.transform = `translateX(${currentX}px)`;
 
@@ -124,8 +126,8 @@ function render() {
 
     div.addEventListener("touchend", ()=>{
 
-      // 👉 eliminar
-      if (currentX < -80) {
+      /* 👉 ELIMINAR */
+      if (rawX < -80) {
         div.style.transition = "transform .2s ease";
         div.style.transform = "translateX(-100%)";
 
@@ -137,12 +139,12 @@ function render() {
         return;
       }
 
-      // 👉 abrir
-      if (currentX > 80) {
+      /* 👉 ABRIR (FIX REAL) */
+      if (rawX > 80) {
         openOpenModal(i);
       }
 
-      // 🔁 volver suave (inercia)
+      /* 🔁 volver */
       div.querySelector(".content").style.transition = "transform .2s ease";
       div.querySelector(".content").style.transform = "translateX(0px)";
 
