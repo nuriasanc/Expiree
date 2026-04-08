@@ -1,7 +1,9 @@
-const CACHE_NAME = "despensa-cache-v1";
+const CACHE_NAME = "expiree-cache-v1";
+
 const urlsToCache = [
   "./",
   "./index.html",
+  "./styles.css",
   "./manifest.json",
   "./icono.png"
 ];

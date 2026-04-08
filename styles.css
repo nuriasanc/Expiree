@@ -1,0 +1,108 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+  background: #f2f2f7;
+  color: #000;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.dark {
+  background: #000;
+  color: #fff;
+}
+
+.app {
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.card {
+  background: rgba(255,255,255,0.9);
+  padding: 15px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  margin-bottom: 15px;
+  backdrop-filter: blur(10px);
+}
+
+body.dark .card {
+  background: #1c1c1e;
+}
+
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border-radius: 14px;
+  border: none;
+  background: #007aff;
+  color: white;
+  font-weight: 600;
+}
+
+.search {
+  margin-bottom: 10px;
+}
+
+.item {
+  background: rgba(255,255,255,0.9);
+  padding: 16px;
+  border-radius: 18px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.2s;
+}
+
+body.dark .item {
+  background: #1c1c1e;
+}
+
+.item.expired {
+  border-left: 5px solid red;
+}
+
+.item.soon {
+  border-left: 5px solid orange;
+}
+
+.name {
+  font-weight: 600;
+}
+
+.date {
+  font-size: 13px;
+  color: gray;
+}
+
+.actions button {
+  width: auto;
+  padding: 6px 10px;
+  margin-left: 5px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.actions button:first-child {
+  background: #ccc;
+  color: black;
+}
+
+.actions button:last-child {
+  background: red;
+}
