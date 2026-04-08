@@ -3,137 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Expiree</title>
 
-<link href="https://unpkg.com/lucide@latest/dist/umd/lucide.js" rel="preload" as="script">
+<link rel="stylesheet" href="styles.css">
+<script src="https://unpkg.com/lucide@latest"></script>
 
-<style>
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial;
-  background: #f5f5f7;
-}
-
-/* CONTENEDOR */
-.container {
-  max-width: 1200px;
-  margin: auto;
-  padding: 15px;
-}
-
-/* BOTÓN + */
-.add-btn {
-  position: fixed;
-  bottom: 90px;
-  right: 20px;
-  background: black;
-  color: white;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  font-size: 30px;
-  border: none;
-}
-
-/* LISTA */
-.item {
-  background: white;
-  padding: 15px;
-  border-radius: 16px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: all .25s ease;
-}
-
-/* COLORES */
-.rojo { border-left: 5px solid red; }
-.amarillo { border-left: 5px solid orange; }
-.verde { border-left: 5px solid green; }
-
-/* MODAL */
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hidden { display: none; }
-
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 400px;
-  animation: pop .25s ease;
-}
-
-@keyframes pop {
-  from { transform: scale(.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-input, select {
-  width: 100%;
-  margin: 8px 0;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  box-sizing: border-box;
-}
-
-/* BOTONES CATEGORÍA */
-.cat-btn {
-  padding: 8px 12px;
-  border-radius: 10px;
-  border: none;
-  margin: 5px;
-  background: #eee;
-}
-
-.cat-btn.active {
-  background: black;
-  color: white;
-}
-
-/* NAV */
-nav {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: white;
-  display: flex;
-  justify-content: space-around;
-  padding: 10px;
-  border-top: 1px solid #ddd;
-}
-
-nav button {
-  background: none;
-  border: none;
-  font-size: 12px;
-}
-
-nav .active {
-  color: blue;
-}
-
-/* BOTONES DESKTOP */
-.actions button {
-  margin-left: 5px;
-  border: none;
-  background: #eee;
-  padding: 5px;
-  border-radius: 8px;
-}
-
-</style>
 </head>
 
 <body>
@@ -145,27 +20,32 @@ nav .active {
 
 <button class="add-btn" onclick="openModal()">+</button>
 
-<nav>
-  <button onclick="filtrar('Nevera')">Nevera</button>
-  <button onclick="filtrar('Congelador')">Congelador</button>
-  <button onclick="filtrar('Despensa')">Despensa</button>
-</nav>
-
 <!-- MODAL CREAR -->
 <div id="modal" class="modal hidden">
   <div class="modal-content">
 
     <input id="nombre" placeholder="Nombre">
     <input id="fecha" type="date">
-    <input id="cantidad" placeholder="Cantidad">
 
-    <div>
-      <button class="cat-btn" onclick="setCat('Nevera',this)">Nevera</button>
-      <button class="cat-btn" onclick="setCat('Congelador',this)">Congelador</button>
-      <button class="cat-btn" onclick="setCat('Despensa',this)">Despensa</button>
+    <div class="cats">
+      <button onclick="setCat('Nevera',this)">
+        <i data-lucide="snowflake"></i>
+      </button>
+      <button onclick="setCat('Congelador',this)">
+        <i data-lucide="snow"></i>
+      </button>
+      <button onclick="setCat('Despensa',this)">
+        <i data-lucide="archive"></i>
+      </button>
     </div>
 
-    <button onclick="addItem()">Guardar</button>
+    <div class="qty">
+      <button onclick="qty.value = Math.max(1, qty.value-1)">-</button>
+      <input id="qty" type="number" value="1" min="1">
+      <button onclick="qty.value++">+</button>
+    </div>
+
+    <button class="btn" onclick="addItem()">Guardar</button>
 
   </div>
 </div>
@@ -176,183 +56,14 @@ nav .active {
 
     <input id="editNombre">
     <input id="editFecha" type="date">
-    <input id="editCantidad">
+    <input id="editCantidad" type="number">
 
-    <button onclick="saveEdit()">Guardar cambios</button>
+    <button class="btn" onclick="saveEdit()">Guardar cambios</button>
 
   </div>
 </div>
 
-<script src="https://unpkg.com/lucide@latest"></script>
-
-<script>
-
-let items = JSON.parse(localStorage.getItem("items")) || [];
-let categoria = null;
-let editIndex = null;
-
-function guardar() {
-  localStorage.setItem("items", JSON.stringify(items));
-}
-
-/* MODAL */
-function openModal() {
-  modal.classList.remove("hidden");
-}
-
-function closeModal() {
-  modal.classList.add("hidden");
-}
-
-/* CATEGORÍA */
-function setCat(c, el) {
-  categoria = c;
-  document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
-  el.classList.add("active");
-}
-
-/* CREAR */
-function addItem() {
-
-  if (!nombre.value.trim()) return alert("Nombre obligatorio");
-
-  items.push({
-    nombre: nombre.value,
-    fecha: fecha.value,
-    cantidad: cantidad.value,
-    categoria: categoria || "Despensa"
-  });
-
-  guardar();
-  render();
-  closeModal();
-
-  nombre.value = "";
-  fecha.value = "";
-  cantidad.value = "";
-  categoria = null;
-}
-
-/* DIAS */
-function dias(fecha) {
-  if (!fecha) return 9999;
-  return Math.ceil((new Date(fecha) - new Date()) / 86400000);
-}
-
-/* COLOR */
-function color(d) {
-  if (d <= 5) return "rojo";
-  if (d <= 15) return "amarillo";
-  return "verde";
-}
-
-/* ELIMINAR */
-function eliminar(i) {
-  items.splice(i,1);
-  guardar();
-  render();
-}
-
-/* ABRIR */
-function abrir(i) {
-  let d = prompt("Días hasta caducar");
-  if (!d) return;
-
-  let fecha = new Date();
-  fecha.setDate(fecha.getDate() + parseInt(d));
-
-  items[i].fecha = fecha.toISOString().split("T")[0];
-  guardar();
-  render();
-}
-
-/* EDITAR */
-function edit(i) {
-  editIndex = i;
-
-  editNombre.value = items[i].nombre;
-  editFecha.value = items[i].fecha || "";
-  editCantidad.value = items[i].cantidad || "";
-
-  editModal.classList.remove("hidden");
-}
-
-function saveEdit() {
-  items[editIndex].nombre = editNombre.value;
-  items[editIndex].fecha = editFecha.value;
-  items[editIndex].cantidad = editCantidad.value;
-
-  guardar();
-  render();
-  editModal.classList.add("hidden");
-}
-
-/* RENDER */
-function render() {
-
-  lista.innerHTML = "";
-
-  items.sort((a,b)=>dias(a.fecha)-dias(b.fecha));
-
-  items.forEach((item,i)=>{
-
-    let d = dias(item.fecha);
-
-    let div = document.createElement("div");
-    div.className = "item "+color(d);
-
-    div.innerHTML = `
-      <div>
-        <b>${item.nombre}</b>
-        <div>${item.cantidad||""}</div>
-      </div>
-    `;
-
-    let startX = 0;
-    let moved = false;
-
-    div.addEventListener("touchstart", e=>{
-      startX = e.touches[0].clientX;
-    });
-
-    div.addEventListener("touchmove", ()=>{
-      moved = true;
-    });
-
-    div.addEventListener("touchend", e=>{
-
-      let dx = e.changedTouches[0].clientX - startX;
-
-      if (!moved) return;
-
-      if (dx > 80) abrir(i);
-      if (dx < -80) eliminar(i);
-
-      moved = false;
-    });
-
-    if (window.innerWidth > 768) {
-      let actions = document.createElement("div");
-      actions.className = "actions";
-
-      actions.innerHTML = `
-        <button onclick="abrir(${i})"><i data-lucide="unlock"></i></button>
-        <button onclick="edit(${i})"><i data-lucide="edit"></i></button>
-        <button onclick="eliminar(${i})"><i data-lucide="trash"></i></button>
-      `;
-
-      div.appendChild(actions);
-    }
-
-    lista.appendChild(div);
-  });
-
-  lucide.createIcons();
-}
-
-render();
-
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>

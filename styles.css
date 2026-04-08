@@ -1,66 +1,205 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
-  background: #f2f2f7;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text";
+  background: #f5f5f7;
 }
 
 /* CONTENEDOR */
-.app {
+.container {
   max-width: 1200px;
   margin: auto;
-  padding: 20px;
-  padding-bottom: 120px;
-}
-
-/* TITULOS */
-.titulo {
-  font-size: 18px;
-  font-weight: 600;
-  color: #8e8e93;
-  margin: 20px 0 10px;
+  padding: 15px;
 }
 
 /* ITEM */
 .item {
-  background: #fff;
-  padding: 16px;
+  position: relative;
+  background: white;
+  padding: 15px;
   border-radius: 16px;
   margin-bottom: 10px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
-  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
 }
 
-/* COLORES CADUCIDAD */
-.verde {
-  border-left: 5px solid #34c759;
+/* TEXTO */
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform .2s ease;
 }
 
-.amarillo {
-  border-left: 5px solid #ffcc00;
+/* ACCIONES OCULTAS */
+.actions {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  background: #ff3b30;
+  color: white;
+  padding: 0 20px;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity .2s;
 }
 
-.rojo {
-  border-left: 5px solid #ff3b30;
-}
-
-/* DIAS */
-.dias {
-  font-size: 12px;
-  color: #8e8e93;
-}
-
-/* FAB */
-.fab {
+/* MODAL */
+.modal {
   position: fixed;
-  bottom: 80px;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 380px;
+  box-sizing: border-box;
+}
+
+/* INPUTS */
+input {
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+}
+
+/* CATEGORÍAS */
+.cats {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.cats button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 12px;
+  border: none;
+  background: #eee;
+}
+
+.cats button.active {
+  background: black;
+  color: white;
+}
+
+/* BOTÓN */
+.btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: black;
+  color: white;
+  margin-top: 10px;
+}
+
+/* BOTÓN + */
+.add-btn {
+  position: fixed;
+  bottom: 20px;
   right: 20px;
+  background: black;
+  color: white;
+  border-radius: 50%;
   width: 60px;
   height: 60px;
-  border-radius: 50%;
-  background: #007aff;
-  color: white;
+  font-size: 30px;
   border: none;
-  font-size: 24px;
+}
+
+.desktop-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.desktop-actions button {
+  border: none;
+  background: #eee;
+  padding: 6px;
+  border-radius: 8px;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text";
+  background: #f5f5f7;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 15px;
+}
+
+/* ITEM */
+.item {
+  position: relative;
+  background: white;
+  padding: 15px;
+  border-radius: 16px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: transform .25s ease, opacity .25s ease;
+}
+
+/* BARRA CADUCIDAD */
+.progress {
+  height: 4px;
+  background: #eee;
+  border-radius: 10px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  transition: width .3s ease;
+}
+
+/* COLORES */
+.red { background: #ff3b30; }
+.orange { background: #ff9500; }
+.green { background: #34c759; }
+
+/* ACCIONES */
+.actions {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  background: #ff3b30;
+  color: white;
+  padding: 0 20px;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+/* CONTENIDO */
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
 }
 
 /* MODAL */
@@ -73,100 +212,81 @@ body {
   align-items: center;
 }
 
-.hidden {
-  display: none;
-}
-
-.modal-content {
-  background: #fff;
-  padding: 20px;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 400px;
-  box-sizing: border-box;
-}
-
-/* INPUTS (SOLUCIÓN AL OVERFLOW) */
-input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 12px;
-  border: 1px solid #d1d1d6;
-  box-sizing: border-box;
-  font-size: 16px;
-}
-
-/* BOTÓN */
-.btn-primary {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  background: #007aff;
-  color: white;
-  font-weight: 600;
-}
-
-/* CATEGORÍAS */
-.categorias {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-/* BOTONES */
-.cat {
-  flex: 1;
-  padding: 10px;
-  border-radius: 12px;
-  border: none;
-  background: #e5e5ea;
-  font-size: 18px;
-}
-
-/* SELECTED */
-.cat.active {
-  background: #007aff;
-  color: white;
-}
-
-/* ACCIONES DESKTOP */
-.actions {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  display: flex;
-  gap: 8px;
-}
-
-.actions button {
-  border: none;
-  background: #f2f2f7;
-  border-radius: 8px;
-  padding: 6px;
-}
-
-/* RESPONSIVE */
-@media (min-width: 768px) {
-  .item {
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
+.hidden { display: none; }
 
 .modal-content {
   background: white;
   padding: 20px;
   border-radius: 20px;
   width: 90%;
-  max-width: 400px;
-  box-sizing: border-box;
-  overflow: hidden;
+  max-width: 380px;
 }
 
+/* INPUTS */
 input {
   width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 10px;
+  border: 1px solid #ddd;
   box-sizing: border-box;
+}
+
+/* BOTÓN */
+.btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: black;
+  color: white;
+  margin-top: 10px;
+}
+
+/* CANTIDAD */
+.qty {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qty button {
+  border: none;
+  background: #eee;
+  border-radius: 8px;
+  width: 30px;
+  height: 30px;
+}
+
+/* CATEGORÍAS */
+.cats {
+  display: flex;
+  gap: 10px;
+}
+
+.cats button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 12px;
+  border: none;
+  background: #eee;
+}
+
+.cats button.active {
+  background: black;
+  color: white;
+}
+
+/* BOTÓN + */
+.add-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: black;
+  color: white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 30px;
+  border: none;
 }
