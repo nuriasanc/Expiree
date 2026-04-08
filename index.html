@@ -22,14 +22,25 @@
 
 <!-- MODAL CREAR -->
 <div id="modal" class="modal hidden">
-  <div class="modal-content">
+  <div class="modal-content" onclick="event.stopPropagation()">
 
-    <input id="nombre" placeholder="Nombre">
-    <input id="fecha" type="date">
+    <div class="row">
+      <input id="nombre" placeholder="Nombre">
+      
+      <div class="qty">
+        <input id="qty" type="number" value="1" min="1">
+        <div class="qty-buttons">
+          <button onclick="qty.value++">+</button>
+          <button onclick="qty.value = Math.max(1, qty.value-1)">-</button>
+        </div>
+      </div>
+    </div>
+
+    <input id="fecha" type="date" class="fecha">
 
     <div class="cats">
       <button onclick="setCat('Nevera',this)">
-        <i data-lucide="fridge"></i>
+        <i data-lucide="package"></i>
         <span>Nevera</span>
       </button>
 
@@ -44,22 +55,16 @@
       </button>
     </div>
 
-    <div class="qty">
-      <button onclick="qty.value = Math.max(1, qty.value-1)">-</button>
-      <input id="qty" type="number" value="1" min="1">
-      <button onclick="qty.value++">+</button>
-    </div>
-
     <button class="btn" onclick="addItem()">Guardar</button>
 
   </div>
 </div>
 
-<!-- MODAL ABIERTO -->
+<!-- MODAL ABRIR -->
 <div id="openModal" class="modal hidden">
-  <div class="modal-content">
+  <div class="modal-content" onclick="event.stopPropagation()">
 
-    <h3>Marcar como abierto</h3>
+    <h3>Abrir alimento</h3>
     <input id="diasAbierto" type="number" placeholder="Días hasta caducar">
 
     <button class="btn" onclick="confirmOpen()">Confirmar</button>
