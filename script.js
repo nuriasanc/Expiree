@@ -2,14 +2,15 @@ let items = JSON.parse(localStorage.getItem("items")) || [];
 let categoria = "Despensa";
 let openIndex = null;
 
-/* MODAL */
-modal.addEventListener("click", () => modal.classList.add("hidden"));
-openModal.addEventListener("click", () => openModal.classList.add("hidden"));
+/* MODALES */
+modal.onclick = () => modal.classList.add("hidden");
+openModal.onclick = () => openModal.classList.add("hidden");
 
 function openModal() {
   modal.classList.remove("hidden");
 }
 
+/* CATEGORÍA */
 function setCat(c, el) {
   categoria = c;
   document.querySelectorAll(".cats button").forEach(b => b.classList.remove("active"));
@@ -20,6 +21,7 @@ function guardar() {
   localStorage.setItem("items", JSON.stringify(items));
 }
 
+/* AÑADIR */
 function addItem() {
 
   if (!nombre.value.trim()) return alert("Nombre obligatorio");
@@ -92,41 +94,37 @@ function render() {
       <div class="content">
         <div>
           <b>${item.nombre}</b>
-          <div>
-            Cant: ${item.cantidad} · ${item.abierto ? "Abierto" : "Cerrado"}
-          </div>
+          <div> Cant: ${item.cantidad} · ${item.abierto ? "Abierto" : "Cerrado"} </div>
           <div>${item.fecha ? `Caduca en ${d} días` : "Sin fecha"}</div>
         </div>
       </div>
     `;
 
     let startX = 0;
+    let currentX = 0;
 
     div.addEventListener("touchstart", e=>{
       startX = e.touches[0].clientX;
     });
 
     div.addEventListener("touchmove", e=>{
-      let dx = e.touches[0].clientX - startX;
 
-      div.querySelector(".content").style.transform = `translateX(${dx}px)`;
+      currentX = e.touches[0].clientX - startX;
 
-      if (dx > 50) div.querySelector(".bg-left").style.opacity = 1;
-      else div.querySelector(".bg-left").style.opacity = 0;
+      div.querySelector(".content").style.transform = `translateX(${currentX}px)`;
 
-      if (dx < -50) div.querySelector(".bg-right").style.opacity = 1;
-      else div.querySelector(".bg-right").style.opacity = 0;
+      div.querySelector(".bg-left").style.opacity = currentX > 40 ? 1 : 0;
+      div.querySelector(".bg-right").style.opacity = currentX < -40 ? 1 : 0;
+
     });
 
-    div.addEventListener("touchend", e=>{
+    div.addEventListener("touchend", ()=>{
 
-      let dx = e.changedTouches[0].clientX - startX;
-
-      if (dx < -100) {
+      if (currentX < -100) {
         items.splice(i,1);
       }
 
-      if (dx > 100) {
+      if (currentX > 100) {
         openOpenModal(i);
       }
 

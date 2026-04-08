@@ -2,6 +2,7 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont;
   background: #f5f5f7;
+  -webkit-user-select: none;
 }
 
 .container {
@@ -20,7 +21,7 @@ body {
   overflow: hidden;
 }
 
-/* SWIPE FONDOS */
+/* FONDOS SWIPE */
 .bg-left, .bg-right {
   position: absolute;
   top: 0;
@@ -32,6 +33,7 @@ body {
   color: white;
   font-weight: bold;
   opacity: 0;
+  transition: opacity .2s;
 }
 
 .bg-left {
@@ -48,9 +50,7 @@ body {
 .content {
   position: relative;
   z-index: 2;
-  display: flex;
-  justify-content: space-between;
-  transition: transform .2s;
+  transition: transform .2s ease;
 }
 
 /* MODAL */
@@ -75,7 +75,7 @@ body {
   max-width: 360px;
 }
 
-/* FILA NOMBRE + CANTIDAD */
+/* FILA */
 .row {
   display: flex;
   gap: 10px;
@@ -85,6 +85,7 @@ body {
   flex: 3;
 }
 
+/* CANTIDAD */
 .qty {
   flex: 1;
   display: flex;
@@ -104,15 +105,17 @@ body {
   height: 20px;
 }
 
-/* FECHA MÁS PEQUEÑA */
+/* FECHA */
 .fecha {
-  max-width: 200px;
+  width: 90%;
+  display: block;
 }
 
 /* CATEGORÍAS */
 .cats {
   display: flex;
   gap: 10px;
+  margin-top: 10px;
 }
 
 .cats button {
@@ -120,6 +123,15 @@ body {
   border: 2px solid #ddd;
   border-radius: 12px;
   background: white;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.cats button span {
+  font-size: 12px;
 }
 
 .cats button.active {
@@ -134,6 +146,7 @@ body {
   border: none;
   background: black;
   color: white;
+  margin-top: 10px;
 }
 
 /* BOTÓN + */

@@ -2,7 +2,9 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 🚫 SIN ZOOM -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>Expiree</title>
 
@@ -20,13 +22,13 @@
 
 <button class="add-btn" onclick="openModal()">+</button>
 
-<!-- MODAL CREAR -->
+<!-- MODAL -->
 <div id="modal" class="modal hidden">
   <div class="modal-content" onclick="event.stopPropagation()">
 
     <div class="row">
       <input id="nombre" placeholder="Nombre">
-      
+
       <div class="qty">
         <input id="qty" type="number" value="1" min="1">
         <div class="qty-buttons">
