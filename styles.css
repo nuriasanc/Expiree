@@ -155,3 +155,18 @@ input {
     margin-right: auto;
   }
 }
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 400px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+}
