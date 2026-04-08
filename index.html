@@ -1,79 +1,31 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-<title>Expiree</title>
-
-<link rel="stylesheet" href="styles.css">
-<script src="https://unpkg.com/lucide@latest"></script>
-
-</head>
-
-<body>
-
-<div class="container">
-  <h2>Expiree</h2>
-  <div id="lista"></div>
-</div>
-
-<button class="add-btn" onclick="openModal()">+</button>
-
-<!-- MODAL CREAR -->
-<div id="modal" class="modal hidden">
+<!-- MODAL EDITAR -->
+<div id="editModal" class="modal hidden">
   <div class="modal-content" onclick="event.stopPropagation()">
 
-    <div class="row">
-      <input id="nombre" placeholder="Nombre">
+    <h3>Editar alimento</h3>
 
-      <div class="qty">
-        <input id="qty" type="number" value="1" min="1">
-        <div class="qty-buttons">
-          <button onclick="qty.value++">+</button>
-          <button onclick="qty.value = Math.max(1, qty.value-1)">-</button>
-        </div>
+    <input id="editNombre" placeholder="Nombre">
+
+    <div class="row">
+      <input id="editQty" type="number" min="1">
+
+      <div class="qty-buttons">
+        <button onclick="editQty.value++">+</button>
+        <button onclick="editQty.value = Math.max(1, editQty.value-1)">-</button>
       </div>
     </div>
 
-    <input id="fecha" type="date" class="fecha">
-
-    <div class="cats">
-      <button onclick="setCat('Nevera',this)">
-        <i data-lucide="package"></i>
-        <span>Nevera</span>
-      </button>
-
-      <button onclick="setCat('Congelador',this)">
-        <i data-lucide="snowflake"></i>
-        <span>Congelador</span>
-      </button>
-
-      <button onclick="setCat('Despensa',this)">
-        <i data-lucide="archive"></i>
-        <span>Despensa</span>
-      </button>
+    <div id="editFechaContainer">
+      <input id="editFecha" type="date">
     </div>
 
-    <button class="btn" onclick="addItem()">Guardar</button>
+    <div id="editDiasContainer" style="display:none;">
+      <input id="editDias" type="number" placeholder="Días hasta caducar">
+    </div>
+
+    <button class="btn" onclick="toggleEstado()">Cambiar estado</button>
+
+    <button class="btn" onclick="saveEdit()">Guardar</button>
 
   </div>
 </div>
-
-<!-- MODAL ABRIR -->
-<div id="openModal" class="modal hidden">
-  <div class="modal-content" onclick="event.stopPropagation()">
-
-    <h3>Abrir alimento</h3>
-    <input id="diasAbierto" type="number" placeholder="¿En cuántos días caduca?">
-
-    <button class="btn" onclick="confirmOpen()">Confirmar</button>
-
-  </div>
-</div>
-
-<script src="script.js"></script>
-
-</body>
-</html>

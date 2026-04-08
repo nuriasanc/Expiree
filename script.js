@@ -1,13 +1,21 @@
 let items = JSON.parse(localStorage.getItem("items")) || [];
 let categoria = "Despensa";
+
 let openIndex = null;
+let editIndex = null;
+
+/* ELEMENTOS */
+const modalEl = document.getElementById("modal");
+const openModalEl = document.getElementById("openModal");
+const editModalEl = document.getElementById("editModal");
 
 /* MODALES */
-modal.onclick = () => modal.classList.add("hidden");
-openModal.onclick = () => openModal.classList.add("hidden");
+modalEl.onclick = () => modalEl.classList.add("hidden");
+openModalEl.onclick = () => openModalEl.classList.add("hidden");
+editModalEl.onclick = () => editModalEl.classList.add("hidden");
 
 function openModal() {
-  modal.classList.remove("hidden");
+  modalEl.classList.remove("hidden");
 }
 
 /* CATEGORÍA */
@@ -37,7 +45,7 @@ function addItem() {
   guardar();
   render();
 
-  modal.classList.add("hidden");
+  modalEl.classList.add("hidden");
 
   nombre.value = "";
   fecha.value = "";
@@ -47,7 +55,7 @@ function addItem() {
 /* ABRIR */
 function openOpenModal(i) {
   openIndex = i;
-  openModal.classList.remove("hidden");
+  openModalEl.classList.remove("hidden");
 }
 
 function confirmOpen() {
@@ -64,8 +72,60 @@ function confirmOpen() {
   guardar();
   render();
 
-  openModal.classList.add("hidden");
+  openModalEl.classList.add("hidden");
   diasAbierto.value = "";
+}
+
+/* EDITAR */
+function openEditModal(i) {
+
+  editIndex = i;
+  let item = items[i];
+
+  editNombre.value = item.nombre;
+  editQty.value = item.cantidad;
+
+  if (item.abierto) {
+    editFechaContainer.style.display = "none";
+    editDiasContainer.style.display = "block";
+  } else {
+    editFechaContainer.style.display = "block";
+    editDiasContainer.style.display = "none";
+    editFecha.value = item.fecha || "";
+  }
+
+  editModalEl.classList.remove("hidden");
+}
+
+function toggleEstado() {
+  let item = items[editIndex];
+  item.abierto = !item.abierto;
+
+  openEditModal(editIndex);
+}
+
+function saveEdit() {
+
+  let item = items[editIndex];
+
+  item.nombre = editNombre.value;
+  item.cantidad = editQty.value;
+
+  if (item.abierto) {
+    let d = parseInt(editDias.value);
+    if (d) {
+      let f = new Date();
+      f.setDate(f.getDate() + d);
+      item.fecha = f.toISOString().split("T")[0];
+    }
+  } else {
+    item.fecha = editFecha.value;
+  }
+
+  guardar();
+  render();
+
+  editModalEl.classList.add("hidden");
 }
 
 /* DÍAS */
@@ -101,59 +161,54 @@ function render() {
       </div>
     `;
 
+    /* SWIPE */
     let startX = 0;
-    let currentX = 0;
     let rawX = 0;
+
+    /* LONG PRESS */
+    let pressTimer;
+    let isLongPress = false;
 
     div.addEventListener("touchstart", e=>{
       startX = e.touches[0].clientX;
-      currentX = 0;
       rawX = 0;
+      isLongPress = false;
+
+      pressTimer = setTimeout(()=>{
+        isLongPress = true;
+        openEditModal(i);
+      }, 500);
     });
 
     div.addEventListener("touchmove", e=>{
-
       rawX = e.touches[0].clientX - startX;
 
-      // ✨ resistencia tipo iOS
-      currentX = rawX * 0.6;
+      if (Math.abs(rawX) > 10) clearTimeout(pressTimer);
 
-      div.querySelector(".content").style.transform = `translateX(${currentX}px)`;
+      let move = rawX * 0.6;
 
-      div.querySelector(".bg-left").style.opacity = currentX > 30 ? 1 : 0;
-      div.querySelector(".bg-right").style.opacity = currentX < -30 ? 1 : 0;
+      div.querySelector(".content").style.transform = `translateX(${move}px)`;
+
+      div.querySelector(".bg-left").style.opacity = move > 30 ? 1 : 0;
+      div.querySelector(".bg-right").style.opacity = move < -30 ? 1 : 0;
     });
 
     div.addEventListener("touchend", ()=>{
 
-      /* 👉 ELIMINAR */
-      if (rawX < -80) {
-        div.style.transition = "transform .2s ease";
-        div.style.transform = "translateX(-100%)";
+      clearTimeout(pressTimer);
 
-        setTimeout(()=>{
-          items.splice(i,1);
-          guardar();
-          render();
-        },200);
-        return;
+      if (isLongPress) return;
+
+      if (rawX < -80) {
+        items.splice(i,1);
       }
 
-      /* 👉 ABRIR (FIX REAL) */
       if (rawX > 80) {
         openOpenModal(i);
       }
 
-      /* 🔁 volver */
-      div.querySelector(".content").style.transition = "transform .2s ease";
-      div.querySelector(".content").style.transform = "translateX(0px)";
-
-      setTimeout(()=>{
-        div.querySelector(".content").style.transition = "";
-      },200);
-
-      div.querySelector(".bg-left").style.opacity = 0;
-      div.querySelector(".bg-right").style.opacity = 0;
+      guardar();
+      render();
     });
 
     lista.appendChild(div);
