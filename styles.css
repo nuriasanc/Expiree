@@ -29,9 +29,9 @@ body {
   width: 100%;
   display: flex;
   align-items: center;
-  padding: 0 20px;
   color: white;
   font-weight: bold;
+  font-size: 14px;
   opacity: 0;
   transition: opacity .2s;
 }
@@ -39,13 +39,14 @@ body {
 .bg-left {
   background: #34c759;
   justify-content: flex-start;
+  padding-left: 20px;
 }
 
 .bg-right {
   background: #ff3b30;
   justify-content: flex-end;
+  padding-right: 20px;
 }
-
 /* CONTENIDO */
 .content {
   position: relative;

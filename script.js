@@ -53,7 +53,7 @@ function openOpenModal(i) {
 function confirmOpen() {
 
   let d = parseInt(diasAbierto.value);
-  if (!d) return;
+  if (!d || d <= 0) return;
 
   let f = new Date();
   f.setDate(f.getDate() + d);
@@ -65,6 +65,7 @@ function confirmOpen() {
   render();
 
   openModal.classList.add("hidden");
+  diasAbierto.value = "";
 }
 
 /* DÍAS */
@@ -105,31 +106,52 @@ function render() {
 
     div.addEventListener("touchstart", e=>{
       startX = e.touches[0].clientX;
+      currentX = 0;
     });
 
     div.addEventListener("touchmove", e=>{
 
-      currentX = e.touches[0].clientX - startX;
+      let raw = e.touches[0].clientX - startX;
+
+      // ✨ resistencia tipo iOS
+      currentX = raw * 0.6;
 
       div.querySelector(".content").style.transform = `translateX(${currentX}px)`;
 
-      div.querySelector(".bg-left").style.opacity = currentX > 40 ? 1 : 0;
-      div.querySelector(".bg-right").style.opacity = currentX < -40 ? 1 : 0;
-
+      div.querySelector(".bg-left").style.opacity = currentX > 30 ? 1 : 0;
+      div.querySelector(".bg-right").style.opacity = currentX < -30 ? 1 : 0;
     });
 
     div.addEventListener("touchend", ()=>{
 
-      if (currentX < -100) {
-        items.splice(i,1);
+      // 👉 eliminar
+      if (currentX < -80) {
+        div.style.transition = "transform .2s ease";
+        div.style.transform = "translateX(-100%)";
+
+        setTimeout(()=>{
+          items.splice(i,1);
+          guardar();
+          render();
+        },200);
+        return;
       }
 
-      if (currentX > 100) {
+      // 👉 abrir
+      if (currentX > 80) {
         openOpenModal(i);
       }
 
-      guardar();
-      render();
+      // 🔁 volver suave (inercia)
+      div.querySelector(".content").style.transition = "transform .2s ease";
+      div.querySelector(".content").style.transform = "translateX(0px)";
+
+      setTimeout(()=>{
+        div.querySelector(".content").style.transition = "";
+      },200);
+
+      div.querySelector(".bg-left").style.opacity = 0;
+      div.querySelector(".bg-right").style.opacity = 0;
     });
 
     lista.appendChild(div);
