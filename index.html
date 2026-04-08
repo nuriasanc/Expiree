@@ -29,13 +29,18 @@
 
     <div class="cats">
       <button onclick="setCat('Nevera',this)">
-        <i data-lucide="snowflake"></i>
+        <i data-lucide="fridge"></i>
+        <span>Nevera</span>
       </button>
+
       <button onclick="setCat('Congelador',this)">
-        <i data-lucide="snow"></i>
+        <i data-lucide="snowflake"></i>
+        <span>Congelador</span>
       </button>
+
       <button onclick="setCat('Despensa',this)">
         <i data-lucide="archive"></i>
+        <span>Despensa</span>
       </button>
     </div>
 
@@ -50,15 +55,14 @@
   </div>
 </div>
 
-<!-- MODAL EDIT -->
-<div id="editModal" class="modal hidden">
+<!-- MODAL ABIERTO -->
+<div id="openModal" class="modal hidden">
   <div class="modal-content">
 
-    <input id="editNombre">
-    <input id="editFecha" type="date">
-    <input id="editCantidad" type="number">
+    <h3>Marcar como abierto</h3>
+    <input id="diasAbierto" type="number" placeholder="Días hasta caducar">
 
-    <button class="btn" onclick="saveEdit()">Guardar cambios</button>
+    <button class="btn" onclick="confirmOpen()">Confirmar</button>
 
   </div>
 </div>
