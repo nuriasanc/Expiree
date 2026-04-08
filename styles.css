@@ -1,108 +1,157 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
   background: #f2f2f7;
-  color: #000;
-  -webkit-font-smoothing: antialiased;
 }
 
-body.dark {
-  background: #000;
-  color: #fff;
-}
-
+/* CONTENEDOR */
 .app {
-  max-width: 500px;
+  max-width: 1200px;
   margin: auto;
   padding: 20px;
+  padding-bottom: 120px;
 }
 
-h1 {
-  text-align: center;
+/* TITULOS */
+.titulo {
+  font-size: 18px;
+  font-weight: 600;
+  color: #8e8e93;
+  margin: 20px 0 10px;
 }
 
-.card {
-  background: rgba(255,255,255,0.9);
-  padding: 15px;
+/* ITEM */
+.item {
+  background: #fff;
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  position: relative;
+}
+
+/* COLORES CADUCIDAD */
+.verde {
+  border-left: 5px solid #34c759;
+}
+
+.amarillo {
+  border-left: 5px solid #ffcc00;
+}
+
+.rojo {
+  border-left: 5px solid #ff3b30;
+}
+
+/* DIAS */
+.dias {
+  font-size: 12px;
+  color: #8e8e93;
+}
+
+/* FAB */
+.fab {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #007aff;
+  color: white;
+  border: none;
+  font-size: 24px;
+}
+
+/* MODAL */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
   border-radius: 20px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-  margin-bottom: 15px;
-  backdrop-filter: blur(10px);
+  width: 90%;
+  max-width: 400px;
+  box-sizing: border-box;
 }
 
-body.dark .card {
-  background: #1c1c1e;
-}
-
-input, select {
+/* INPUTS (SOLUCIÓN AL OVERFLOW) */
+input {
   width: 100%;
   padding: 12px;
-  margin-top: 8px;
+  margin-bottom: 10px;
   border-radius: 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #d1d1d6;
+  box-sizing: border-box;
   font-size: 16px;
 }
 
-button {
+/* BOTÓN */
+.btn-primary {
   width: 100%;
-  padding: 14px;
-  margin-top: 10px;
-  border-radius: 14px;
+  padding: 12px;
+  border-radius: 12px;
   border: none;
   background: #007aff;
   color: white;
   font-weight: 600;
 }
 
-.search {
-  margin-bottom: 10px;
-}
-
-.item {
-  background: rgba(255,255,255,0.9);
-  padding: 16px;
-  border-radius: 18px;
-  margin-bottom: 10px;
+/* CATEGORÍAS */
+.categorias {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: 0.2s;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
-body.dark .item {
-  background: #1c1c1e;
+/* BOTONES */
+.cat {
+  flex: 1;
+  padding: 10px;
+  border-radius: 12px;
+  border: none;
+  background: #e5e5ea;
+  font-size: 18px;
 }
 
-.item.expired {
-  border-left: 5px solid red;
+/* SELECTED */
+.cat.active {
+  background: #007aff;
+  color: white;
 }
 
-.item.soon {
-  border-left: 5px solid orange;
-}
-
-.name {
-  font-weight: 600;
-}
-
-.date {
-  font-size: 13px;
-  color: gray;
+/* ACCIONES DESKTOP */
+.actions {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  display: flex;
+  gap: 8px;
 }
 
 .actions button {
-  width: auto;
-  padding: 6px 10px;
-  margin-left: 5px;
-  border-radius: 10px;
-  font-size: 14px;
+  border: none;
+  background: #f2f2f7;
+  border-radius: 8px;
+  padding: 6px;
 }
 
-.actions button:first-child {
-  background: #ccc;
-  color: black;
-}
-
-.actions button:last-child {
-  background: red;
+/* RESPONSIVE */
+@media (min-width: 768px) {
+  .item {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }

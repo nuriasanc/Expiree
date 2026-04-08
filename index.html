@@ -1,150 +1,258 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Expiree</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#007aff">
+<title>Expiree</title>
 
-  <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css">
+<script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
 
 <div class="app">
-  <h1>🥫 Expiree</h1>
-
-  <div class="card"> 
-    <input id="nombre" placeholder="Alimento">
-    <input id="fecha" type="date">
-
-    <select id="categoria">
-      <option value="">Categoría</option>
-      <option value="Nevera">🧊 Nevera</option>
-      <option value="Congelador">❄️ Congelador</option>
-      <option value="Despensa">🥫 Despensa</option>
-    </select>
-
-    <button onclick="addItem()">Añadir</button>
-  </div>
-
-  <input id="buscar" class="search" placeholder="🔍 Buscar..." oninput="render()">
-
   <div id="lista"></div>
 </div>
 
+<button class="fab" onclick="openModal()">
+  <i data-lucide="plus"></i>
+</button>
+
+<!-- MODAL -->
+<div id="modal" class="modal hidden">
+  <div class="modal-content">
+
+    <input id="nombre" placeholder="Alimento">
+    <input id="fecha" type="date">
+    <input id="cantidad" type="number" placeholder="Cantidad">
+
+    <div class="categorias">
+
+      <button class="cat nevera" onclick="setCat('Nevera', this)">
+        <i data-lucide="snowflake"></i>
+        <span>Nevera</span>
+      </button>
+
+      <button class="cat congelador" onclick="setCat('Congelador', this)">
+        <i data-lucide="ice-cream"></i>
+        <span>Congelador</span>
+      </button>
+
+      <button class="cat despensa" onclick="setCat('Despensa', this)">
+        <i data-lucide="box"></i>
+        <span>Despensa</span>
+      </button>
+
+    </div>
+
+    <button class="btn-primary" onclick="addItem()">Guardar</button>
+
+  </div>
+</div>
+
 <script>
+
 let items = JSON.parse(localStorage.getItem("items")) || [];
+let categoria = null;
 
 function guardar() {
   localStorage.setItem("items", JSON.stringify(items));
 }
 
+function openModal() {
+  modal.classList.remove("hidden");
+}
+
+function closeModal() {
+  modal.classList.add("hidden");
+}
+
+function setCat(c, el) {
+  categoria = c;
+  document.querySelectorAll(".cat").forEach(b => b.classList.remove("active"));
+  el.classList.add("active");
+}
+
+/* =========================
+   VALIDACIÓN + CREACIÓN
+========================= */
 function addItem() {
-  const nombre = document.getElementById("nombre").value;
-  const fecha = document.getElementById("fecha").value;
-  const categoria = document.getElementById("categoria").value;
+  const nombreVal = nombre.value.trim();
+  const fechaVal = fecha.value;
 
-  if (!nombre || !fecha) return;
-
-  items.push({ nombre, fecha, categoria });
-
-  guardar();
-  render();
-
-  document.getElementById("nombre").value = "";
-  document.getElementById("fecha").value = "";
-}
-
-function eliminar(index) {
-  items.splice(index, 1);
-  guardar();
-  render();
-}
-
-function editar(index) {
-  const nuevo = prompt("Nuevo nombre:", items[index].nombre);
-  if (nuevo) {
-    items[index].nombre = nuevo;
-    guardar();
-    render();
+  if (!nombreVal) {
+    alert("El nombre no puede estar vacío");
+    return;
   }
+
+  if (fechaVal) {
+    const hoy = new Date().setHours(0,0,0,0);
+    const f = new Date(fechaVal).setHours(0,0,0,0);
+
+    if (f < hoy) {
+      alert("La fecha no puede ser anterior a hoy");
+      return;
+    }
+  }
+
+  items.push({
+    nombre: nombreVal,
+    fecha: fechaVal || null,
+    cantidad: cantidad.value,
+    categoria: categoria || "Despensa",
+    abierto: false
+  });
+
+  guardar();
+  render();
+  closeModal();
+
+  nombre.value = "";
+  fecha.value = "";
+  cantidad.value = "";
+  categoria = null;
 }
+
+/* =========================
+   FUNCIONES
+========================= */
 
 function dias(fecha) {
-  const hoy = new Date();
-  return Math.ceil((new Date(fecha) - hoy) / (1000*60*60*24));
+  if (!fecha) return 9999;
+  return Math.ceil((new Date(fecha) - new Date()) / 86400000);
 }
 
-function render() {
-  const lista = document.getElementById("lista");
-  const filtro = document.getElementById("buscar").value.toLowerCase();
+function colorEstado(d) {
+  if (d <= 5) return "rojo";
+  if (d <= 15) return "amarillo";
+  return "verde";
+}
 
+function eliminar(i) {
+  items.splice(i, 1);
+  guardar();
+  render();
+}
+
+function editar(i) {
+  let n = prompt("Nombre", items[i].nombre);
+  let c = prompt("Cantidad", items[i].cantidad);
+
+  if (n) items[i].nombre = n;
+  if (c) items[i].cantidad = c;
+
+  guardar();
+  render();
+}
+
+function marcarAbierto(i) {
+  let dias = prompt("¿En cuántos días caduca ahora?");
+
+  dias = parseInt(dias);
+  if (!dias || dias <= 0) return;
+
+  const hoy = new Date();
+  hoy.setDate(hoy.getDate() + dias);
+
+  items[i].fecha = hoy.toISOString().split("T")[0];
+  items[i].abierto = true;
+
+  guardar();
+  render();
+}
+
+/* =========================
+   RENDER
+========================= */
+
+function render() {
+
+  const lista = document.getElementById("lista");
   lista.innerHTML = "";
 
-  items
-    .filter(i => i.nombre.toLowerCase().includes(filtro))
-    .sort((a,b) => new Date(a.fecha) - new Date(b.fecha))
-    .forEach((item, index) => {
+  const categorias = ["Nevera", "Congelador", "Despensa"];
 
+  categorias.forEach(cat => {
+
+    const filtrados = items
+      .filter(i => i.categoria === cat)
+      .sort((a,b)=>dias(a.fecha)-dias(b.fecha));
+
+    if (!filtrados.length) return;
+
+    const titulo = document.createElement("h2");
+    titulo.className = "titulo";
+    titulo.textContent = cat;
+    lista.appendChild(titulo);
+
+    filtrados.forEach(item => {
+
+      const realIndex = items.indexOf(item);
       const d = dias(item.fecha);
+      const estado = colorEstado(d);
 
       const div = document.createElement("div");
-      div.className = "item";
-
-      if (d < 0) div.classList.add("expired");
-      else if (d <= 3) div.classList.add("soon");
+      div.className = `item ${estado}`;
 
       div.innerHTML = `
-        <div class="info">
-          <div class="name">${item.nombre}</div>
-          <div class="date">
-            ${item.categoria || ""} · ${d < 0 ? "Caducado" : d + " días"}
-          </div>
-        </div>
-
-        <div class="actions">
-          <button onclick="editar(${index})">✏️</button>
-          <button onclick="eliminar(${index})">🗑️</button>
+        <div>
+          <b>${item.nombre}</b> ${item.cantidad ? "x"+item.cantidad : ""}
+          <div class="dias">${item.fecha ? d + " días" : ""}</div>
         </div>
       `;
 
-      // swipe
-      let startX = 0;
-      div.addEventListener("touchstart", e => startX = e.touches[0].clientX);
-      div.addEventListener("touchend", e => {
-        let endX = e.changedTouches[0].clientX;
-        if (startX - endX > 80) eliminar(index);
-      });
+      /* =========================
+         SWIPE SOLO EN MÓVIL
+      ========================= */
+      if (window.innerWidth < 768) {
+
+        let startX = 0;
+
+        div.addEventListener("touchstart", e => {
+          startX = e.touches[0].clientX;
+        });
+
+        div.addEventListener("touchend", e => {
+          let dx = e.changedTouches[0].clientX - startX;
+
+          if (dx > 80) marcarAbierto(realIndex);
+          if (dx < -80) editar(realIndex);
+        });
+
+      } else {
+        /* BOTONES EN DESKTOP */
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        actions.innerHTML = `
+          <button onclick="marcarAbierto(${realIndex})">
+            <i data-lucide="unlock"></i>
+          </button>
+
+          <button onclick="editar(${realIndex})">
+            <i data-lucide="pencil"></i>
+          </button>
+
+          <button onclick="eliminar(${realIndex})">
+            <i data-lucide="trash-2"></i>
+          </button>
+        `;
+
+        div.appendChild(actions);
+      }
 
       lista.appendChild(div);
     });
-}
-
-// Dark mode automático
-if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-  document.body.classList.add("dark");
-}
-
-// Notificaciones
-if ("Notification" in window) {
-  Notification.requestPermission();
-}
-
-function notificar() {
-  items.forEach(item => {
-    const d = dias(item.fecha);
-    if (d === 1) {
-      new Notification("⚠️ Caduca mañana: " + item.nombre);
-    }
   });
-}
 
-setInterval(notificar, 60000);
+  lucide.createIcons();
+}
 
 render();
+
 </script>
 
 </body>
