@@ -21,7 +21,7 @@ body {
   overflow: hidden;
 }
 
-/* FONDOS SWIPE */
+/* SWIPE BACKGROUNDS */
 .bg-left, .bg-right {
   position: absolute;
   top: 0;
@@ -29,11 +29,9 @@ body {
   width: 100%;
   display: flex;
   align-items: center;
-  color: white;
   font-weight: bold;
-  font-size: 14px;
+  color: white;
   opacity: 0;
-  transition: opacity .2s;
 }
 
 .bg-left {
@@ -47,11 +45,11 @@ body {
   justify-content: flex-end;
   padding-right: 20px;
 }
-/* CONTENIDO */
+
+/* CONTENT */
 .content {
   position: relative;
   z-index: 2;
-  transition: transform .2s ease;
 }
 
 /* MODAL */
@@ -76,25 +74,20 @@ body {
   max-width: 360px;
 }
 
-/* FILA */
+/* EDIT MODAL */
+.edit-box {
+  animation: fadeIn .2s ease;
+}
+
+@keyframes fadeIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* INPUTS */
 .row {
   display: flex;
   gap: 10px;
-}
-
-.row input {
-  flex: 3;
-}
-
-/* CANTIDAD */
-.qty {
-  flex: 1;
-  display: flex;
-}
-
-.qty input {
-  width: 40px;
-  text-align: center;
 }
 
 .qty-buttons {
@@ -102,44 +95,12 @@ body {
   flex-direction: column;
 }
 
-.qty-buttons button {
-  height: 20px;
-}
-
-/* FECHA */
 .fecha {
-  width: 90%;
-  display: block;
-}
-
-/* CATEGORÍAS */
-.cats {
-  display: flex;
-  gap: 10px;
+  width: 100%;
   margin-top: 10px;
 }
 
-.cats button {
-  flex: 1;
-  border: 2px solid #ddd;
-  border-radius: 12px;
-  background: white;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.cats button span {
-  font-size: 12px;
-}
-
-.cats button.active {
-  border-color: black;
-}
-
-/* BOTÓN */
+/* BOTONES */
 .btn {
   width: 100%;
   padding: 12px;
@@ -150,7 +111,7 @@ body {
   margin-top: 10px;
 }
 
-/* BOTÓN + */
+/* FAB */
 .add-btn {
   position: fixed;
   bottom: 20px;
@@ -162,4 +123,26 @@ body {
   color: white;
   font-size: 30px;
   border: none;
+}
+
+/* CATEGORÍAS */
+.cats {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.cats button {
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 10px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cats button.active {
+  border: 2px solid black;
 }

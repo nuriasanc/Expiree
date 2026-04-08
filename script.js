@@ -9,11 +9,11 @@ const modalEl = document.getElementById("modal");
 const openModalEl = document.getElementById("openModal");
 const editModalEl = document.getElementById("editModal");
 
-/* MODALES */
 modalEl.onclick = () => modalEl.classList.add("hidden");
 openModalEl.onclick = () => openModalEl.classList.add("hidden");
 editModalEl.onclick = () => editModalEl.classList.add("hidden");
 
+/* ABRIR MODAL CREAR */
 function openModal() {
   modalEl.classList.remove("hidden");
 }
@@ -25,6 +25,7 @@ function setCat(c, el) {
   el.classList.add("active");
 }
 
+/* GUARDAR */
 function guardar() {
   localStorage.setItem("items", JSON.stringify(items));
 }
@@ -61,7 +62,7 @@ function openOpenModal(i) {
 function confirmOpen() {
 
   let d = parseInt(diasAbierto.value);
-  if (!d || d <= 0) return;
+  if (!d) return;
 
   let f = new Date();
   f.setDate(f.getDate() + d);
@@ -73,7 +74,6 @@ function confirmOpen() {
   render();
 
   openModalEl.classList.add("hidden");
-  diasAbierto.value = "";
 }
 
 /* EDITAR */
@@ -98,9 +98,7 @@ function openEditModal(i) {
 }
 
 function toggleEstado() {
-  let item = items[editIndex];
-  item.abierto = !item.abierto;
-
+  items[editIndex].abierto = !items[editIndex].abierto;
   openEditModal(editIndex);
 }
 
@@ -124,7 +122,6 @@ function saveEdit() {
 
   guardar();
   render();
-
   editModalEl.classList.add("hidden");
 }
 
@@ -139,8 +136,6 @@ function render() {
 
   lista.innerHTML = "";
 
-  items.sort((a,b)=>dias(a.fecha)-dias(b.fecha));
-
   items.forEach((item,i)=>{
 
     let d = dias(item.fecha);
@@ -153,29 +148,24 @@ function render() {
       <div class="bg-right">Eliminar</div>
 
       <div class="content">
-        <div>
-          <b>${item.nombre}</b>
-          <div> Cant: ${item.cantidad} · ${item.abierto ? "Abierto" : "Cerrado"} </div>
-          <div>${item.fecha ? `Caduca en ${d} días` : "Sin fecha"}</div>
-        </div>
+        <b>${item.nombre}</b>
+        <div>Cant: ${item.cantidad} · ${item.abierto ? "Abierto" : "Cerrado"}</div>
+        <div>${item.fecha ? `Caduca en ${d} días` : ""}</div>
       </div>
     `;
 
-    /* SWIPE */
     let startX = 0;
     let rawX = 0;
 
-    /* LONG PRESS */
     let pressTimer;
-    let isLongPress = false;
+    let longPress = false;
 
     div.addEventListener("touchstart", e=>{
       startX = e.touches[0].clientX;
-      rawX = 0;
-      isLongPress = false;
+      longPress = false;
 
       pressTimer = setTimeout(()=>{
-        isLongPress = true;
+        longPress = true;
         openEditModal(i);
       }, 500);
     });
@@ -188,7 +178,6 @@ function render() {
       let move = rawX * 0.6;
 
       div.querySelector(".content").style.transform = `translateX(${move}px)`;
-
       div.querySelector(".bg-left").style.opacity = move > 30 ? 1 : 0;
       div.querySelector(".bg-right").style.opacity = move < -30 ? 1 : 0;
     });
@@ -197,7 +186,7 @@ function render() {
 
       clearTimeout(pressTimer);
 
-      if (isLongPress) return;
+      if (longPress) return;
 
       if (rawX < -80) {
         items.splice(i,1);
