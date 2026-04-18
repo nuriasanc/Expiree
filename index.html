@@ -7,60 +7,48 @@
 
 <title>Expiree</title>
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="src/styles/main.css">
+<link rel="stylesheet" href="src/styles/modal.css">
+<link rel="stylesheet" href="src/styles/list.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 
 </head>
 
 <body>
 
-<div class="container">
+<!-- LOGIN -->
+<div id="auth" class="auth">
+  <h2>Expiree</h2>
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()">Entrar</button>
+  <button onclick="signup()">Crear cuenta</button>
+</div>
+
+<!-- APP -->
+<div class="container hidden" id="app">
+
   <h2>Expiree</h2>
   <div id="lista"></div>
+
+  <button class="add-btn" onclick="openModal()">+</button>
+
 </div>
 
-<button class="add-btn" onclick="openModal()">+</button>
-
-<!-- MODAL CREAR -->
-<div id="modal" class="modal hidden">
-  <div class="modal-content" onclick="event.stopPropagation()">
-
-    <input id="nombre" placeholder="Nombre">
-
-    <div class="row">
-      <input id="qty" type="number" value="1" min="1">
-      <div class="qty-buttons">
-        <button onclick="qty.value++">+</button>
-        <button onclick="qty.value = Math.max(1, qty.value-1)">-</button>
-      </div>
-    </div>
-
-    <input id="fecha" type="date" class="fecha">
-
-    <div class="cats">
-      <button onclick="setCat('Nevera',this)">Nevera</button>
-      <button onclick="setCat('Congelador',this)">Congelador</button>
-      <button onclick="setCat('Despensa',this)">Despensa</button>
-    </div>
-
-    <button class="btn" onclick="addItem()">Guardar</button>
-
-  </div>
+<!-- NAV -->
+<div class="nav hidden" id="nav">
+  <button onclick="showTab('lista')">Lista</button>
+  <button onclick="showTab('calendar')">Semana</button>
 </div>
 
-<!-- MODAL ABRIR -->
-<div id="openModal" class="modal hidden">
-  <div class="modal-content" onclick="event.stopPropagation()">
-
-    <h3>Abrir</h3>
-    <input id="diasAbierto" type="number" placeholder="Días hasta caducar">
-
-    <button class="btn" onclick="confirmOpen()">Confirmar</button>
-
-  </div>
-</div>
-
-<script src="script.js"></script>
+<script src="src/js/db.js"></script>
+<script src="src/js/auth.js"></script>
+<script src="src/js/ui.js"></script>
+<script src="src/js/swipe.js"></script>
+<script src="src/js/calendar.js"></script>
+<script src="src/js/app.js"></script>
 
 </body>
 </html>
