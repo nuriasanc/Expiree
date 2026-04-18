@@ -1,18 +1,40 @@
 let user = null;
 
+function showError(msg) {
+  authError.innerText = msg;
+}
+
+/* CREAR CUENTA */
 async function signup() {
+
+  showError("");
+
+  if (!email.value || !password.value) {
+    showError("Debes completar email y contraseña");
+    return;
+  }
+
   let { error } = await supabaseClient.auth.signUp({
     email: email.value,
     password: password.value
   });
 
-  if (error) alert(error.message);
-  else alert("Cuenta creada, ahora inicia sesión");
+  if (error) {
+    showError(error.message);
+  } else {
+    showError("Cuenta creada. Ahora inicia sesión");
+  }
 }
 
+/* LOGIN */
 async function login() {
 
-  authError.innerText = "";
+  showError("");
+
+  if (!email.value || !password.value) {
+    showError("Debes completar email y contraseña");
+    return;
+  }
 
   let { data, error } = await supabaseClient.auth.signInWithPassword({
     email: email.value,
@@ -20,16 +42,12 @@ async function login() {
   });
 
   if (error) {
-    authError.innerText = "Email o contraseña incorrectos";
+    showError("Email o contraseña incorrectos");
     return;
   }
 
-  auth.classList.add("hide"); // 👈 animación iOS
-
-  setTimeout(() => {
-    user = data.user;
-    startApp();
-  }, 300);
+  user = data.user;
+  startApp();
 }
 
 async function checkSession() {

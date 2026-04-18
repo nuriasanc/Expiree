@@ -124,3 +124,33 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
+
+.auth {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.auth.hide {
+  opacity: 0;
+  transform: scale(1.05);
+  pointer-events: none;
+}
+
+.container,
+.nav {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: 0.4s ease;
+}
+
+.container.show,
+.nav.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.auth-content{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 5%;
+}

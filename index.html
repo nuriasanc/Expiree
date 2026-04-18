@@ -20,11 +20,22 @@
 
 <!-- LOGIN -->
 <div id="auth" class="auth">
-  <h2>Expiree</h2>
-  <input id="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Password">
-  <button onclick="login()">Entrar</button>
-  <button onclick="signup()">Crear cuenta</button>
+
+  <div class="auth-content">
+
+    <input id="email" class="input" type="email" placeholder="Email">
+
+    <input id="password" class="input" type="password" placeholder="Contraseña">
+
+    <div class="buttons">
+      <button class="btn primary" onclick="login()">Entrar</button>
+      <button class="btn secondary" onclick="signup()">Crear cuenta</button>
+    </div>
+
+    <div id="authError" class="error"></div>
+
+  </div>
+
 </div>
 
 <!-- APP -->
