@@ -7,23 +7,22 @@ function showError(msg) {
 /* CREAR CUENTA */
 async function signup() {
 
-  showError("");
+  const mail = email.value.trim().toLowerCase();
+  const pass = password.value.trim();
 
-  if (!email.value || !password.value) {
-    showError("Debes completar email y contraseña");
+  console.log("MAIL:", mail);
+
+  if (!mail || !pass) {
+    authError.innerText = "Faltan datos";
     return;
   }
 
   let { error } = await supabaseClient.auth.signUp({
-    email: email.value,
-    password: password.value
+    email: mail,
+    password: pass
   });
 
-  if (error) {
-    showError(error.message);
-  } else {
-    showError("Cuenta creada. Ahora inicia sesión");
-  }
+  if (error) authError.innerText = error.message;
 }
 
 /* LOGIN */

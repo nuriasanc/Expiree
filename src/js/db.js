@@ -1,6 +1,6 @@
 const supabaseClient = supabase.createClient(
-  "TU_URL",
-  "TU_API_KEY"
+  "https://byawcywmkxbjkcvssynh.supabase.co",
+  "sb_publishable_mRbj_xWSUgp4NCF7zmejHQ_U3GRXsUT"
 );
 
 async function getItems(userId) {
