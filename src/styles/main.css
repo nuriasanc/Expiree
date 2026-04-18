@@ -307,3 +307,103 @@ body {
     padding: 32px;
   }
 }
+
+/* BOTÓN + */
+.fab {
+  position: fixed;
+  right: 20px;
+  bottom: 80px;
+
+  width: 60px;
+  height: 60px;
+
+  border-radius: 50%;
+  border: none;
+
+  background: #007aff;
+  color: white;
+  font-size: 30px;
+
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* MODAL */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* contenido */
+.modal-content {
+  width: 90%;
+  max-width: 400px;
+
+  background: white;
+  border-radius: 18px;
+
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* cerrar */
+.close {
+  align-self: flex-end;
+  border: none;
+  background: transparent;
+  font-size: 22px;
+}
+
+/* inputs */
+.input {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+}
+
+/* contenedores */
+.contenedores {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cat {
+  flex: 1;
+  padding: 10px;
+
+  border-radius: 12px;
+  border: 1px solid #ddd;
+
+  background: white;
+  cursor: pointer;
+}
+
+.cat.selected {
+  background: #007aff;
+  color: white;
+}
+
+/* guardar */
+.save {
+  background: #007aff;
+  color: white;
+  border: none;
+
+  padding: 12px;
+  border-radius: 12px;
+}
+
+/* error */
+.error {
+  color: #ff3b30;
+  text-align: center;
+  font-size: 13px;
+}
