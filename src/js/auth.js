@@ -1,43 +1,55 @@
+
 let user = null;
 
 function showError(msg) {
-  authError.innerText = msg;
+  document.getElementById("authError").innerText = msg;
 }
 
-/* CREAR CUENTA */
+/* =========================
+   SIGNUP
+========================= */
+
 async function signup() {
 
   const mail = email.value.trim().toLowerCase();
   const pass = password.value.trim();
 
-  console.log("MAIL:", mail);
-
   if (!mail || !pass) {
-    authError.innerText = "Faltan datos";
+    showError("Faltan datos");
     return;
   }
 
-  let { error } = await supabaseClient.auth.signUp({
+  const { error } = await supabaseClient.auth.signUp({
     email: mail,
     password: pass
   });
 
-  if (error) authError.innerText = error.message;
+  if (error) {
+    showError(error.message);
+  } else {
+    showError("Cuenta creada. Inicia sesión");
+  }
 }
 
-/* LOGIN */
+/* =========================
+   LOGIN
+========================= */
+
 async function login() {
 
   showError("");
 
-  if (!email.value || !password.value) {
-    showError("Debes completar email y contraseña");
+  const mail = email.value.trim();
+  const pass = password.value.trim();
+
+  if (!mail || !pass) {
+    showError("Completa email y contraseña");
     return;
   }
 
-  let { data, error } = await supabaseClient.auth.signInWithPassword({
-    email: email.value,
-    password: password.value
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email: mail,
+    password: pass
   });
 
   if (error) {
@@ -49,16 +61,9 @@ async function login() {
   startApp();
 }
 
-async function checkSession() {
-  const { data } = await supabaseClient.auth.getSession();
-
-  if (data.session) {
-    user = data.session.user;
-    startApp();
-  }
-}
-
-checkSession();
+/* =========================
+   LISTENER SUPABASE
+========================= */
 
 supabaseClient.auth.onAuthStateChange((event, session) => {
 

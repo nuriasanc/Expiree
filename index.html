@@ -18,8 +18,13 @@
 
 <body>
 
+<!-- LOADER -->
+<div id="bootScreen" class="boot-screen">
+  <div class="spinner"></div>
+</div>
+
 <!-- LOGIN -->
-<div id="auth" class="auth">
+<div id="auth" class="auth hidden">
 
   <div class="auth-content">
 
@@ -34,27 +39,33 @@
       <button class="btn secondary" onclick="signup()">Crear cuenta</button>
     </div>
 
-
   </div>
 
 </div>
 
 <!-- APP -->
-<div class="container hidden" id="app">
+<div id="app" class="container hidden">
 
-  <h2>Expiree</h2>
+  <div class="topnav">
+
+    <div class="brand">Expiree</div>
+
+    <div class="user-menu" onclick="toggleMenu()">
+      <i data-lucide="user"></i>
+
+      <div id="dropdown" class="dropdown hidden">
+        <div class="user-email" id="userEmail"></div>
+        <button onclick="logout()">Cerrar sesión</button>
+      </div>
+    </div>
+
+  </div>
+
   <div id="lista"></div>
 
-  <button class="add-btn" onclick="openModal()">+</button>
-
 </div>
 
-<!-- NAV -->
-<div class="nav hidden" id="nav">
-  <button onclick="showTab('lista')">Lista</button>
-  <button onclick="showTab('calendar')">Semana</button>
-</div>
-
+<!-- SCRIPTS -->
 <script src="src/js/db.js"></script>
 <script src="src/js/auth.js"></script>
 <script src="src/js/ui.js"></script>

@@ -1,22 +1,34 @@
+
+const nav = document.getElementById("nav");
+
+/* =========================
+   START APP
+========================= */
+
 function startApp() {
 
-  auth.classList.add("hide");
+  const nav = document.getElementById("nav");
+
+  document.getElementById("auth").classList.add("hide");
 
   setTimeout(() => {
-    auth.style.display = "none";
 
-    app.classList.remove("hidden");
-    nav.classList.remove("hidden");
+    document.getElementById("auth").style.display = "none";
 
-    app.classList.add("show");
-    nav.classList.add("show");
+    document.getElementById("app").classList.remove("hidden");
 
-  }, 300);
+    if (nav) nav.classList.remove("hidden");
 
-  loadItems();
+    document.getElementById("userEmail").innerText = user.email;
+
+    loadItems();
+
+  }, 200);
 }
+/* =========================
+   MODAL
+========================= */
 
-/* MODAL CREAR */
 function openModal() {
   document.getElementById("modal").classList.remove("hidden");
 }
@@ -25,7 +37,10 @@ function closeModal() {
   document.getElementById("modal").classList.add("hidden");
 }
 
-/* AÑADIR ITEM */
+/* =========================
+   ADD ITEM
+========================= */
+
 async function addItem() {
 
   if (!nombre.value.trim()) return;
@@ -40,6 +55,7 @@ async function addItem() {
   });
 
   closeModal();
+
   nombre.value = "";
   fecha.value = "";
   qty.value = 1;
@@ -47,9 +63,29 @@ async function addItem() {
   loadItems();
 }
 
-/* MAP */
+/* =========================
+   CATEGORY MAP
+========================= */
+
 function categoriaToId(cat) {
   if (cat === "Nevera") return 1;
   if (cat === "Congelador") return 2;
   return 3;
+}
+
+/* =========================
+   MENU
+========================= */
+
+function toggleMenu() {
+  document.getElementById("dropdown").classList.toggle("hidden");
+}
+
+/* =========================
+   LOGOUT
+========================= */
+
+async function logout() {
+  await supabaseClient.auth.signOut();
+  location.reload();
 }
