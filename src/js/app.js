@@ -125,24 +125,109 @@ async function loadItems() {
 }
 function createItemElement(item) {
 
-  const div = document.createElement("div");
-  div.className = "item";
+  const wrapper = document.createElement("div");
+  wrapper.className= 'swipe-wrapper';
+
+  const bg = doucment.createElement('div');
+  bg.className = "swipe-bg";
+  bg.innerHTML = "<span>Eliminar</span>";
+
+
+  const card= document.createElement("div");
+  card.className = 'item';
 
   const fecha = item.fecha_caducidad
     ? new Date(item.fecha_caducidad).toLocaleDateString()
     : "Sin fecha";
 
-  div.innerHTML = `
+  card.innerHTML = `
     <div class="item-name">${item.nombre}</div>
     <div class="item-date">${fecha}</div>
     <div class="item-cat">${getCatName(item.contenedor_id)}</div>
   `;
 
-  return div;
+  wrapper.appendChild(bg);
+  wrapper.appendChild(card);
+
+  addSwipe(wrapper, item.id);
+  return wrapper;
 }
 
 function getCatName(id) {
   if (id === 1) return "Nevera";
   if (id === 2) return "Congelador";
   return "Despensa";
+}
+
+
+function addSwipe(wrapper,itemId){
+  let startX = 0;
+  let currentX = 0;
+  let dragging = false;
+
+  const card = wrapper.querySelector(".item");
+  const bg = wrapper.querySelector(".swipe-bg");
+
+  wrapper.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    dragging = true;
+  })
+
+  wrapper.addEventListener("touchmove",(e)=>{
+    if(!dragging) return;
+
+
+    currentX = e.touches[0].clientX - startX;
+
+    if(currentX < 0){
+      card.style.transform = "translateX(" + currentX +"px)";
+
+      let progress= Math.min(Math.abs(currentX) / 100,1);
+      bg.syle.opacity = progress;
+    }
+  })
+
+
+
+    wrapper.addEventListener("touchend", async()=>{
+    
+      dragging= false
+
+
+
+    if(currentX < -120){
+      card.style.transition = "transform 0.s ease";
+      card.style.transition = "translateX(-100%)";
+
+
+      bg.syle.opacity = 1;
+
+      setTimeout(async()=>{
+        await deleteItem(itemId);
+        loadItems();
+      }, 200)
+    
+    }else{     
+       bg.syle.opacity = 0;
+
+      card.style.transform= "translateX(0)"
+    }
+
+    currentX = 0
+
+
+  })
+
+}
+
+
+async function deleteItem(id){
+  const {error} = await supabaseClient
+    .from('items')
+    .delete()
+    .eq("id", id);
+
+    if(error){
+      console.error("Error eliminando");
+    }
 }
