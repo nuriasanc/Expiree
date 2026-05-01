@@ -128,7 +128,7 @@ function createItemElement(item) {
   const wrapper = document.createElement("div");
   wrapper.className= 'swipe-wrapper';
 
-  const bg = doucment.createElement('div');
+  const bg = document.createElement('div');
   bg.className = "swipe-bg";
   bg.innerHTML = "<span>Eliminar</span>";
 
