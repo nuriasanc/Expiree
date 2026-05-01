@@ -443,3 +443,17 @@ body {
   transition: transform 0.15s ease;
   will-change: transform;
 }
+
+.qty-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qty-row button {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: none;
+  background: #eee;
+}
