@@ -378,3 +378,47 @@ input[type="number"] {
     padding: 32px;
   }
 }
+
+/* =========================
+   FIX Z-INDEX MODAL (IMPORTANTE)
+========================= */
+
+.container {
+  position: relative;
+  z-index: 1;
+}
+
+.topnav {
+  z-index: 1000;
+}
+
+/* swipe items por debajo del modal */
+.swipe-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+/* FAB botón */
+.fab {
+  z-index: 1000;
+}
+
+/* MODAL SIEMPRE ENCIMA DE TODO */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999; /* 🔥 clave */
+}
+
+/* contenido del modal aún más arriba */
+.modal-content {
+  position: relative;
+  z-index: 10000;
+}
+
