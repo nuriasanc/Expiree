@@ -2,74 +2,87 @@ function applySwipe(div, item) {
 
   let startX = 0;
   let currentX = 0;
+  let dragging = false;
 
+  // 👉 fondo
   let bg = document.createElement("div");
   bg.className = "swipe-bg";
   div.appendChild(bg);
 
-  div.addEventListener("touchstart", e=>{
+  /* =========================
+     TOUCH START
+  ========================= */
+  div.addEventListener("touchstart", e => {
     startX = e.touches[0].clientX;
+    dragging = true;
+    div.style.transition = "none";
   });
 
-  div.addEventListener("touchmove", e=>{
+  /* =========================
+     TOUCH MOVE
+  ========================= */
+  div.addEventListener("touchmove", e => {
+
+    if (!dragging) return;
+
     currentX = e.touches[0].clientX - startX;
 
     div.style.transform = `translateX(${currentX}px)`;
 
+    // 👉 IZQUIERDA = ELIMINAR
     if (currentX < 0) {
       bg.style.background = "#ff3b30";
       bg.innerText = "Eliminar";
-    } else {
-      bg.style.background = "#007aff";
+
+      bg.style.opacity = Math.min(Math.abs(currentX) / 120, 1);
+    }
+
+    // 👉 DERECHA = ABRIR
+    if (currentX > 0) {
+      bg.style.background = "#34c759";
       bg.innerText = "Abrir";
+
+      bg.style.opacity = Math.min(currentX / 120, 1);
     }
   });
 
-  div.addEventListener("touchend", async ()=>{
+  /* =========================
+     TOUCH END
+  ========================= */
+  div.addEventListener("touchend", async () => {
 
-    if (currentX < -80) {
-      await deleteItemDB(item.id);
-      loadItems();
+    dragging = false;
+    div.style.transition = "transform 0.2s ease";
+
+    // 🔴 ELIMINAR
+    if (currentX < -120) {
+
+      div.style.transform = "translateX(-100%)";
+
+      setTimeout(async () => {
+        await deleteItemDB(item.id);
+        loadItems();
+      }, 200);
+
+      return;
     }
 
-    if (currentX > 80) {
+    // 🟢 ABRIR
+    if (currentX > 120) {
+
       openOpenModal(item.id);
+
+      div.style.transform = "translateX(0)";
+      bg.style.opacity = 0;
+
+      return;
     }
 
+    // 👉 volver a sitio
     div.style.transform = "translateX(0)";
+    bg.style.opacity = 0;
     bg.innerText = "";
+
+    currentX = 0;
   });
-}
-
-let editItem = null;
-let editCantidad = 1;
-
-function openEditModal(item) {
-  editItem = item;
-
-  editNombre.value = item.nombre;
-  editCantidad = item.cantidad || 1;
-
-  editQtyValue.innerText = editCantidad;
-
-  editModal.classList.remove("hidden");
-}
-
-function editQty(n) {
-  editCantidad = Math.max(1, editCantidad + n);
-  editQtyValue.innerText = editCantidad;
-}
-
-async function saveEdit() {
-
-  await supabaseClient
-    .from("items")
-    .update({
-      nombre: editNombre.value,
-      cantidad: editCantidad
-    })
-    .eq("id", editItem.id);
-
-  editModal.classList.add("hidden");
-  loadItems();
 }
