@@ -122,31 +122,28 @@ function setCat(id) {
 
 window.saveItem = async function () {
 
-  console.log("CLICK GUARDAR");
+  if (!nombre.value.trim()) return;
+  if (!selectedCat) return;
 
-  const { data, error } = await supabaseClient
+  await supabaseClient
     .from("items")
     .insert([{
       user_id: user.id,
       nombre: nombre.value.trim(),
-      cantidad:  1,
+      cantidad: qty,
       fecha_caducidad: fecha.value || null,
       contenedor_id: selectedCat,
       abierto: false
-    }])
-    .select();
+    }]);
 
-  console.log("RESULTADO:", data);
-  console.log("ERROR:", error);
-
-  if (error) {
-    alert("ERROR: " + error.message);
-    return;
-  }
+  qty = 1;
+  document.getElementById("qtyValue").innerText = 1;
 
   closeModal();
   loadItems();
 };
+
+
 async function loadItems() {
 
   const { data, error } = await supabaseClient
