@@ -302,6 +302,29 @@ function addSwipe(wrapper, itemId) {
       const progress = Math.min(Math.abs(currentX) / 120, 1);
       bg.style.opacity = progress;
     }
+
+
+     if (currentX > 0) {
+
+  card.style.transform = `translateX(${currentX}px)`;
+
+  bg.innerHTML = "Abrir";
+  bg.style.background = "#34c759"; // verde
+
+  const progress = Math.min(currentX / 120, 1);
+  bg.style.opacity = progress;
+}
+
+if (currentX > 120) {
+
+  openOpenModal(itemId);
+
+  card.style.transform = "translateX(0)";
+  bg.style.opacity = 0;
+
+  return;
+}
+     
   });
 
   wrapper.addEventListener("touchend", async () => {
