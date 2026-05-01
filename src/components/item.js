@@ -19,5 +19,7 @@ function createItemElement(item) {
 
   addSwipe(wrapper, item.id);
 
+  card.onclick = () => openEditModal(item);
+
   return wrapper;
 }
