@@ -40,3 +40,36 @@ function applySwipe(div, item) {
     bg.innerText = "";
   });
 }
+
+let editItem = null;
+let editCantidad = 1;
+
+function openEditModal(item) {
+  editItem = item;
+
+  editNombre.value = item.nombre;
+  editCantidad = item.cantidad || 1;
+
+  editQtyValue.innerText = editCantidad;
+
+  editModal.classList.remove("hidden");
+}
+
+function editQty(n) {
+  editCantidad = Math.max(1, editCantidad + n);
+  editQtyValue.innerText = editCantidad;
+}
+
+async function saveEdit() {
+
+  await supabaseClient
+    .from("items")
+    .update({
+      nombre: editNombre.value,
+      cantidad: editCantidad
+    })
+    .eq("id", editItem.id);
+
+  editModal.classList.add("hidden");
+  loadItems();
+}
