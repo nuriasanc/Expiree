@@ -1,5 +1,7 @@
-
 let items = [];
+let selectedCat = null;
+let qty = 1;
+let openItemId = null;
 
 /* =========================
    RENDER
@@ -63,7 +65,9 @@ window.render = function () {
   lucide.createIcons();
 };
 
-
+/* =========================
+   INIT
+========================= */
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -82,35 +86,38 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 function showLogin() {
-
   document.getElementById("app").classList.add("hidden");
   document.getElementById("auth").classList.remove("hidden");
 }
 
+/* =========================
+   MODAL
+========================= */
 
-let selectedCat = null;
-
-/* abrir modal */
 function openModal() {
   document.getElementById("modal").classList.remove("hidden");
 }
 
-/* cerrar modal */
 function closeModal() {
   document.getElementById("modal").classList.add("hidden");
   clearModal();
 }
 
-/* limpiar */
 function clearModal() {
   nombre.value = "";
   fecha.value = "";
   selectedCat = null;
+  qty = 1;
+  document.getElementById("qtyValue").innerText = 1;
+
   document.querySelectorAll(".cat").forEach(c => c.classList.remove("selected"));
   document.getElementById("modalError").innerText = "";
 }
 
-/* seleccionar categoría */
+/* =========================
+   CATEGORIA
+========================= */
+
 function setCat(id) {
 
   selectedCat = id;
@@ -119,6 +126,10 @@ function setCat(id) {
 
   document.getElementById("cat" + id).classList.add("selected");
 }
+
+/* =========================
+   SAVE ITEM
+========================= */
 
 window.saveItem = async function () {
 
@@ -136,22 +147,19 @@ window.saveItem = async function () {
       abierto: false
     }]);
 
-  qty = 1;
-  document.getElementById("qtyValue").innerText = 1;
-
   closeModal();
   loadItems();
 };
 
+/* =========================
+   LOAD ITEMS
+========================= */
 
 async function loadItems() {
 
   const { data, error } = await supabaseClient
     .from("items")
-    .select(`
-      *,
-      contenedores (nombre)
-    `)
+    .select(`*, contenedores(nombre)`)
     .eq("user_id", user.id);
 
   if (error) {
@@ -162,33 +170,38 @@ async function loadItems() {
   items = data || [];
   render();
 }
+
+/* =========================
+   ITEM UI
+========================= */
+
 function createItemElement(item) {
 
   const wrapper = document.createElement("div");
-  wrapper.className= 'swipe-wrapper';
+  wrapper.className = "swipe-wrapper";
 
-  const bg = document.createElement('div');
+  const bg = document.createElement("div");
   bg.className = "swipe-bg";
-  bg.innerHTML = "<span>Eliminar</span>";
 
-
-  const card= document.createElement("div");
-  card.className = 'item';
+  const card = document.createElement("div");
+  card.className = "item";
 
   const fecha = item.fecha_caducidad
     ? new Date(item.fecha_caducidad).toLocaleDateString()
     : "Sin fecha";
 
   card.innerHTML = `
-    <div class="item-name">${item.nombre}</div>
+    <div class="item-name">${item.nombre} (${item.cantidad || 1})</div>
     <div class="item-date">${fecha}</div>
     <div class="item-cat">${getCatName(item.contenedor_id)}</div>
+    <div class="item-status">${item.abierto ? "🟢 Abierto" : "🔒 Cerrado"}</div>
   `;
 
   wrapper.appendChild(bg);
   wrapper.appendChild(card);
 
   addSwipe(wrapper, item.id);
+
   return wrapper;
 }
 
@@ -198,79 +211,9 @@ function getCatName(id) {
   return "Despensa";
 }
 
-
-function addSwipe(wrapper,itemId){
-  let startX = 0;
-  let currentX = 0;
-  let dragging = false;
-
-  const card = wrapper.querySelector(".item");
-  const bg = wrapper.querySelector(".swipe-bg");
-
-  wrapper.addEventListener("touchstart", (e) => {
-    startX = e.touches[0].clientX;
-    dragging = true;
-  })
-
-  wrapper.addEventListener("touchmove",(e)=>{
-    if(!dragging) return;
-
-
-    currentX = e.touches[0].clientX - startX;
-
-    if(currentX < 0){
-      card.style.transform = "translateX(" + currentX +"px)";
-
-      let progress= Math.min(Math.abs(currentX) / 100,1);
-      bg.syle.opacity = progress;
-    }
-  })
-
-
-
-    wrapper.addEventListener("touchend", async()=>{
-    
-      dragging= false
-
-
-
-    if(currentX < -120){
-      card.style.transition = "transform 0.s ease";
-      card.style.transition = "translateX(-100%)";
-
-
-      bg.syle.opacity = 1;
-
-      setTimeout(async()=>{
-        await deleteItem(itemId);
-        loadItems();
-      }, 200)
-    
-    }else{     
-       bg.syle.opacity = 0;
-
-      card.style.transform= "translateX(0)"
-    }
-
-    currentX = 0
-
-
-  })
-
-}
-
-
-async function deleteItem(id){
-  const {error} = await supabaseClient
-    .from('items')
-    .delete()
-    .eq("id", id);
-
-    if(error){
-      console.error("Error eliminando");
-    }
-}
-
+/* =========================
+   SWIPE (FINAL BUENO)
+========================= */
 
 function addSwipe(wrapper, itemId) {
 
@@ -284,7 +227,7 @@ function addSwipe(wrapper, itemId) {
   wrapper.addEventListener("touchstart", (e) => {
     startX = e.touches[0].clientX;
     dragging = true;
-    card.style.transition = "none"; // sin lag
+    card.style.transition = "none";
   });
 
   wrapper.addEventListener("touchmove", (e) => {
@@ -294,37 +237,18 @@ function addSwipe(wrapper, itemId) {
     currentX = e.touches[0].clientX - startX;
 
     if (currentX < 0) {
-
-      // mover tarjeta
       card.style.transform = `translateX(${currentX}px)`;
-
-      // rojo progresivo
-      const progress = Math.min(Math.abs(currentX) / 120, 1);
-      bg.style.opacity = progress;
+      bg.style.background = "#ff3b30";
+      bg.innerText = "Eliminar";
+      bg.style.opacity = Math.min(Math.abs(currentX) / 120, 1);
     }
 
-
-     if (currentX > 0) {
-
-  card.style.transform = `translateX(${currentX}px)`;
-
-  bg.innerHTML = "Abrir";
-  bg.style.background = "#34c759"; // verde
-
-  const progress = Math.min(currentX / 120, 1);
-  bg.style.opacity = progress;
-}
-
-if (currentX > 120) {
-
-  openOpenModal(itemId);
-
-  card.style.transform = "translateX(0)";
-  bg.style.opacity = 0;
-
-  return;
-}
-     
+    if (currentX > 0) {
+      card.style.transform = `translateX(${currentX}px)`;
+      bg.style.background = "#34c759";
+      bg.innerText = "Abrir";
+      bg.style.opacity = Math.min(currentX / 120, 1);
+    }
   });
 
   wrapper.addEventListener("touchend", async () => {
@@ -332,33 +256,83 @@ if (currentX > 120) {
     dragging = false;
     card.style.transition = "transform 0.2s ease";
 
-    // 🔴 umbral tipo Gmail
     if (currentX < -120) {
 
-      // animación completa
       card.style.transform = "translateX(-100%)";
-      bg.style.opacity = 1;
 
       setTimeout(async () => {
         await deleteItem(itemId);
         loadItems();
       }, 200);
 
-    } else {
-      // volver a posición
+      return;
+    }
+
+    if (currentX > 120) {
+
+      openOpenModal(itemId);
+
       card.style.transform = "translateX(0)";
       bg.style.opacity = 0;
+
+      return;
     }
+
+    card.style.transform = "translateX(0)";
+    bg.style.opacity = 0;
 
     currentX = 0;
   });
 }
 
+/* =========================
+   DELETE
+========================= */
 
-let qty = 1;
+async function deleteItem(id) {
+  const { error } = await supabaseClient
+    .from('items')
+    .delete()
+    .eq("id", id);
+
+  if (error) console.error("Error eliminando", error);
+}
+
+/* =========================
+   QTY
+========================= */
 
 function changeQty(n) {
   qty = Math.max(1, qty + n);
   document.getElementById("qtyValue").innerText = qty;
 }
 
+/* =========================
+   ABRIR ITEM
+========================= */
+
+function openOpenModal(id) {
+  openItemId = id;
+  document.getElementById("openModal").classList.remove("hidden");
+}
+
+async function confirmOpen() {
+
+  const dias = parseInt(diasInput.value);
+
+  if (!dias) return;
+
+  await supabaseClient
+    .from("items")
+    .update({
+      abierto: true,
+      dias_caducidad: dias,
+      fecha_caducidad: null
+    })
+    .eq("id", openItemId);
+
+  document.getElementById("openModal").classList.add("hidden");
+  diasInput.value = "";
+
+  loadItems();
+}
