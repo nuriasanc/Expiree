@@ -29,7 +29,6 @@
   <div class="auth-content">
 
     <input id="email" class="input" type="email" placeholder="Email">
-
     <input id="password" class="input" type="password" placeholder="Contraseña">
 
     <div id="authError" class="error"></div>
@@ -40,12 +39,12 @@
     </div>
 
   </div>
-
 </div>
 
 <!-- APP -->
 <div id="app" class="container hidden">
 
+  <!-- TOP NAV -->
   <div class="topnav">
 
     <div class="brand">Expiree</div>
@@ -61,65 +60,59 @@
 
   </div>
 
+  <!-- LISTA -->
   <div id="lista"></div>
 
 </div>
 
-<!-- BOTÓN + -->
-<button id="addBtn" class="fab" onclick="openModal()">
-  +
-</button>
+<!-- FAB -->
+<button id="addBtn" class="fab" onclick="openModal()">+</button>
 
-<!-- MODAL -->
+<!-- =========================
+     MODAL AÑADIR
+========================= -->
 <div id="modal" class="modal hidden">
 
   <div class="modal-content">
 
-    <!-- cerrar -->
     <button class="close" onclick="closeModal()">×</button>
 
     <h3>Añadir alimento</h3>
 
-    <input id="nombre" class="input" placeholder="Nombre del alimento">
+    <input id="nombre" class="input" placeholder="Nombre">
 
-    <!-- CONTENEDOR (ICONOS) -->
+    <!-- CATEGORÍAS -->
     <div class="contenedores">
 
-      <button class="cat" id="cat1" onclick="setCat(1)">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-snowflake-icon lucide-snowflake"><path d="m10 20-1.25-2.5L6 18"/><path d="M10 4 8.75 6.5 6 6"/><path d="m14 20 1.25-2.5L18 18"/><path d="m14 4 1.25 2.5L18 6"/><path d="m17 21-3-6h-4"/><path d="m17 3-3 6 1.5 3"/><path d="M2 12h6.5L10 9"/><path d="m20 10-1.5 2 1.5 2"/><path d="M22 12h-6.5L14 15"/><path d="m4 10 1.5 2L4 14"/><path d="m7 21 3-6-1.5-3"/><path d="m7 3 3 6h4"/></svg><br><small>Congelador</small>
-      </button>
-
-      <button class="cat" id="cat2" onclick="setCat(2)">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refrigerator-icon lucide-refrigerator"><path d="M5 6a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6Z"/><path d="M5 10h14"/><path d="M15 7v6"/></svg><br><small>Frigorífico</small>
-      </button>
-
-      <button class="cat" id="cat3" onclick="setCat(3)">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cuboid-icon lucide-cuboid"><path d="M10 22v-8"/><path d="M2.336 8.89 10 14l11.715-7.029"/><path d="M22 14a2 2 0 0 1-.971 1.715l-10 6a2 2 0 0 1-2.138-.05l-6-4A2 2 0 0 1 2 16v-6a2 2 0 0 1 .971-1.715l10-6a2 2 0 0 1 2.138.05l6 4A2 2 0 0 1 22 8z"/></svg><br><small>Despensa</small>
-      </button>
+      <button class="cat" id="cat1" onclick="setCat(1)">❄️<br>Congelador</button>
+      <button class="cat" id="cat2" onclick="setCat(2)">🧊<br>Frigorífico</button>
+      <button class="cat" id="cat3" onclick="setCat(3)">📦<br>Despensa</button>
 
     </div>
 
+    <!-- FECHA -->
     <input id="fecha" type="date" class="input">
+
+    <!-- CANTIDAD -->
+    <div class="qty-row">
+      <span>Cant:</span>
+      <button onclick="changeQty(-1)">-</button>
+      <span id="qtyValue">1</span>
+      <button onclick="changeQty(1)">+</button>
+    </div>
 
     <button class="save" onclick="saveItem()">Guardar</button>
 
     <p id="modalError" class="error"></p>
 
   </div>
-
 </div>
 
-  <div class="qty-row">
-  <span>Cant:</span>
+<!-- =========================
+     MODAL EDITAR
+========================= -->
+<div id="editModal" class="modal hidden">
 
-  <button onclick="changeQty(-1)">-</button>
-
-  <span id="qtyValue">1</span>
-
-  <button onclick="changeQty(1)">+</button>
-</div>
-
-  <div id="editModal" class="modal hidden">
   <div class="modal-content">
 
     <h3>Editar</h3>
@@ -137,18 +130,23 @@
   </div>
 </div>
 
+<!-- =========================
+     MODAL ABRIR
+========================= -->
 <div id="openModal" class="modal hidden">
+
   <div class="modal-content">
+
+    <button class="close" onclick="closeOpenModal()">×</button>
 
     <h3>Abrir alimento</h3>
 
-    <input id="diasInput" type="number" placeholder="Días hasta caducar">
+    <input id="diasInput" type="number" class="input" placeholder="Días hasta caducar">
 
     <button onclick="confirmOpen()">Guardar</button>
 
   </div>
 </div>
-  
 
 <!-- SCRIPTS -->
 <script src="src/js/db.js"></script>
