@@ -333,3 +333,12 @@ function addSwipe(wrapper, itemId) {
     currentX = 0;
   });
 }
+
+
+let qty = 1;
+
+function changeQty(n) {
+  qty = Math.max(1, qty + n);
+  document.getElementById("qtyValue").innerText = qty;
+}
+
