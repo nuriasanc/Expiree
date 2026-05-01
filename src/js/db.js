@@ -16,8 +16,16 @@ async function addItemDB(item) {
   await supabaseClient.from("items").insert([item]);
 }
 
-async function deleteItemDB(id) {
-  await supabaseClient.from("items").delete().eq("id", id);
+async function deleteItem(id) {
+
+  const { error } = await supabaseClient
+    .from("items")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error eliminando:", error);
+  }
 }
 
 async function updateItemDB(id, data) {
