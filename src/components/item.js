@@ -6,14 +6,8 @@ function createItemElement(item) {
   const card = document.createElement("div");
   card.className = "item";
 
-  const fecha = item.fecha_caducidad
-    ? new Date(item.fecha_caducidad).toLocaleDateString()
-    : "Sin fecha";
-
   card.innerHTML = `
     <div class="item-name">${item.nombre} (${item.cantidad || 1})</div>
-    <div class="item-date">${fecha}</div>
-    <div class="item-cat">${getCatName(item.contenedor_id)}</div>
     <div class="item-status">
       ${item.abierto ? "🟢 Abierto" : "🔒 Cerrado"}
     </div>
@@ -21,7 +15,7 @@ function createItemElement(item) {
 
   wrapper.appendChild(card);
 
-  // 👉 SOLO ESTE
+  // 👉 IMPORTANTE: usar applySwipe (NO addSwipe)
   applySwipe(wrapper, item);
 
   // 👉 editar al tocar
