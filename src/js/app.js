@@ -10,18 +10,60 @@ window.render = function () {
   const lista = document.getElementById("lista");
   lista.innerHTML = "";
 
-  let ordenados = [...items].sort((a, b) => {
+  const hoy = new Date();
 
-    const aDate = a.fecha_caducidad ? new Date(a.fecha_caducidad) : new Date(999999999999);
-    const bDate = b.fecha_caducidad ? new Date(b.fecha_caducidad) : new Date(999999999999);
+  function diasRestantes(fecha) {
+    if (!fecha) return 9999;
+    return Math.ceil((new Date(fecha) - hoy) / 86400000);
+  }
 
-    return aDate - bDate;
+  // 🔴 URGENTES
+  const urgentes = items
+    .filter(i => i.fecha_caducidad && diasRestantes(i.fecha_caducidad) <= 4)
+    .sort((a, b) => new Date(a.fecha_caducidad) - new Date(b.fecha_caducidad));
+
+  if (urgentes.length) {
+
+    const titulo = document.createElement("h3");
+    titulo.innerText = "⚠️ Caducan pronto";
+    titulo.style.color = "#ff3b30";
+
+    lista.appendChild(titulo);
+
+    urgentes.forEach(item => {
+      const el = createItemElement(item);
+      el.querySelector(".item").style.borderLeft = "4px solid #ff3b30";
+      lista.appendChild(el);
+    });
+  }
+
+  // 📦 POR CONTENEDOR
+  [1, 2, 3].forEach(cat => {
+
+    const grupo = items
+      .filter(i => i.contenedor_id === cat && !urgentes.includes(i))
+      .sort((a, b) => new Date(a.fecha_caducidad || 999999999) - new Date(b.fecha_caducidad || 999999999));
+
+    if (!grupo.length) return;
+
+    const titulo = document.createElement("h3");
+
+    titulo.textContent =
+      cat === 1 ? "Nevera" :
+      cat === 2 ? "Congelador" :
+      "Despensa";
+
+    lista.appendChild(titulo);
+
+    grupo.forEach(item => {
+      lista.appendChild(createItemElement(item));
+    });
   });
 
-  ordenados.forEach(item => {
-    lista.appendChild(createItemElement(item));
-  });
-}
+  lucide.createIcons();
+};
+
+
 
 document.addEventListener("DOMContentLoaded", async () => {
 
