@@ -1,5 +1,5 @@
 /* =========================
-   BASE SYSTEM (iOS STYLE)
+   BASE
 ========================= */
 
 * {
@@ -26,12 +26,10 @@ body {
   position: fixed;
   inset: 0;
   background: #f2f2f7;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  z-index: 9999;
+  z-index: 99999;
 }
 
 .spinner {
@@ -48,90 +46,16 @@ body {
 }
 
 /* =========================
-   AUTH (LOGIN)
-========================= */
-
-.auth {
-  position: fixed;
-  inset: 0;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background: #f2f2f7;
-}
-
-.auth-content {
-  width: 100%;
-  max-width: 420px;
-  padding: 24px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.input,
-input[type="date"],
-input[type="number"] {
-  width: 100%;
-  padding: 14px 16px;
-
-  border-radius: 12px;
-  border: 1px solid #ddd;
-
-  font-size: 16px;
-
-  background: #fff;
-}
-
-/* botones login */
-.buttons {
-  display: flex;
-  gap: 10px;
-}
-
-.btn {
-  flex: 1;
-  padding: 14px;
-
-  border-radius: 12px;
-  border: none;
-
-  font-size: 16px;
-}
-
-.primary {
-  background: #007aff;
-  color: white;
-}
-
-.secondary {
-  background: #e5e5ea;
-  color: #111;
-}
-
-/* error */
-.error {
-  font-size: 13px;
-  color: #ff3b30;
-  text-align: center;
-  min-height: 16px;
-}
-
-/* =========================
    APP LAYOUT
 ========================= */
 
 .container {
   padding: 16px;
   padding-top: 80px;
-
   max-width: 900px;
   margin: 0 auto;
-
-  overflow-x: hidden;
+  position: relative;
+  z-index: 1;
 }
 
 /* =========================
@@ -173,16 +97,15 @@ input[type="number"] {
   border-radius: 14px;
 
   padding: 14px;
-  margin-bottom: 10px;
-
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 
   position: relative;
   z-index: 2;
+
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 /* =========================
-   SWIPE SYSTEM
+   SWIPE (FIX REAL)
 ========================= */
 
 .swipe-wrapper {
@@ -190,6 +113,7 @@ input[type="number"] {
   overflow: hidden;
   border-radius: 14px;
   margin-bottom: 10px;
+  z-index: 1;
 }
 
 .swipe-bg {
@@ -200,7 +124,7 @@ input[type="number"] {
   align-items: center;
   justify-content: flex-end;
 
-  padding-right: 20px;
+  padding-right: 16px;
 
   color: white;
   font-weight: 600;
@@ -208,11 +132,16 @@ input[type="number"] {
   opacity: 0;
   transition: opacity 0.2s ease;
 
-  border-radius: 14px;
+  z-index: 0;
+}
+
+/* IMPORTANTE: evita que el bg crezca raro */
+.swipe-bg span {
+  font-size: 14px;
 }
 
 /* =========================
-   FLOAT BUTTON
+   FAB
 ========================= */
 
 .fab {
@@ -233,11 +162,11 @@ input[type="number"] {
 
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 
-  z-index: 999;
+  z-index: 1001;
 }
 
 /* =========================
-   MODAL SYSTEM
+   MODAL FIX (CLAVE)
 ========================= */
 
 .modal {
@@ -250,7 +179,7 @@ input[type="number"] {
   justify-content: center;
   align-items: center;
 
-  z-index: 9999;
+  z-index: 99999;
 }
 
 .modal-content {
@@ -260,23 +189,85 @@ input[type="number"] {
   background: white;
   border-radius: 20px;
 
-  padding: 18px;
+  padding: 20px;
 
   display: flex;
   flex-direction: column;
   gap: 12px;
 
+  z-index: 100000;
+}
+
+/* evita que nada se salga del modal */
+.modal-content * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* =========================
+   INPUT FIX REAL (DATE MOBILE BUG)
+========================= */
+
+.input,
+input[type="date"],
+input[type="number"] {
+  width: 100%;
+  padding: 14px 16px;
+
+  font-size: 16px;
+
+  border-radius: 12px;
+  border: 1px solid #ddd;
+
+  background: #fff;
+
+  outline: none;
+
+  max-width: 100%;
+}
+
+/* FIX ESPECÍFICO IOS DATE */
+input[type="date"] {
+  appearance: none;
+  -webkit-appearance: none;
   overflow: hidden;
 }
 
-/* cerrar modal */
+/* =========================
+   BOTÓN GUARDAR GRANDE
+========================= */
+
+.save {
+  width: 100%;
+
+  padding: 16px;
+
+  border-radius: 14px;
+  border: none;
+
+  font-size: 17px;
+  font-weight: 600;
+
+  background: #007aff;
+  color: white;
+
+  margin-top: 6px;
+
+  box-shadow: 0 8px 20px rgba(0,122,255,0.25);
+}
+
+/* =========================
+   CLOSE MODAL
+========================= */
+
 .close {
   align-self: flex-end;
+
+  font-size: 24px;
 
   border: none;
   background: transparent;
 
-  font-size: 22px;
   color: #8e8e93;
 }
 
@@ -327,283 +318,19 @@ input[type="number"] {
 }
 
 /* =========================
-   DROPDOWN USER
+   FIX SWIPE NO SOBREPASA ITEM
 ========================= */
 
-.dropdown {
-  position: absolute;
-  right: 0;
-  top: 42px;
-
-  width: 200px;
-
-  background: white;
-  border-radius: 14px;
-
-  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-
-  padding: 10px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.dropdown button {
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-
-  background: #ff3b30;
-  color: white;
-}
-
-.user-email {
-  font-size: 12px;
-  color: #8e8e93;
-  word-break: break-word;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (min-width: 768px) {
-  .container {
-    padding: 24px;
-    padding-top: 80px;
-  }
-
-  .auth-content {
-    padding: 32px;
-  }
-}
-
-/* =========================
-   FIX Z-INDEX MODAL (IMPORTANTE)
-========================= */
-
-.container {
-  position: relative;
-  z-index: 1;
-}
-
-.topnav {
-  z-index: 1000;
-}
-
-/* swipe items por debajo del modal */
-.swipe-wrapper {
-  position: relative;
-  z-index: 1;
-}
-
-/* FAB botón */
-.fab {
-  z-index: 1000;
-}
-
-/* MODAL SIEMPRE ENCIMA DE TODO */
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  z-index: 9999; /* 🔥 clave */
-}
-
-/* contenido del modal aún más arriba */
-.modal-content {
-  position: relative;
-  z-index: 10000;
-}
-
-/* =========================
-   MODAL FIX IOS (UI CLEAN)
-========================= */
-
-.modal-content {
-  width: 92%;
-  max-width: 420px;
-
-  background: #fff;
-  border-radius: 20px;
-
-  padding: 22px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-
-  box-sizing: border-box;
-}
-
-/* evita desbordes raros */
-.modal-content * {
-  box-sizing: border-box;
-}
-
-/* INPUTS MÁS LIMPIOS */
-.input {
-  width: 100%;
-  padding: 14px 16px;
-
-  font-size: 16px;
-
-  border-radius: 12px;
-  border: 1px solid rgba(0,0,0,0.12);
-
-  background: #fff;
-
-  outline: none;
-}
-
-/* FIX ESPECÍFICO PARA DATE (EL PROBLEMA REAL) */
-input[type="date"] {
-  width: 100%;
-  max-width: 100%;
-
-  padding: 14px 16px;
-
-  font-size: 16px;
-
-  border-radius: 12px;
-  border: 1px solid rgba(0,0,0,0.12);
-
-  background: #fff;
-
-  appearance: none;
-  -webkit-appearance: none;
-
+.swipe-wrapper,
+.item {
   overflow: hidden;
 }
 
-/* BOTÓN GUARDAR GRANDE IOS STYLE */
-.save {
-  width: 100%;
+/* =========================
+   Z-INDEX FIX FINAL (IMPORTANTE)
+========================= */
 
-  padding: 16px;
-
-  border-radius: 14px;
-  border: none;
-
-  font-size: 17px;
-  font-weight: 600;
-
-  background: #007aff;
-  color: white;
-
-  margin-top: 6px;
-
-  box-shadow: 0 8px 20px rgba(0,122,255,0.25);
-}
-
-/* efecto press iOS */
-.save:active {
-  transform: scale(0.98);
-}
-
-/* CLOSE BUTTON MÁS BONITO */
-.close {
-  align-self: flex-end;
-
-  font-size: 24px;
-  border: none;
-  background: transparent;
-
-  color: #8e8e93;
-}
-
-/* spacing interno modal más consistente */
-.modal-content h3 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  z-index: 9999; /* 👈 CLAVE */
-}
-
-.topnav {
-  z-index: 1000;
-}
-
-.fab {
-  z-index: 1001;
-}
-
-.modal-content input[type="date"] {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.input {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.save {
-  width: 100%;
-  padding: 14px 16px;
-
-  font-size: 16px;
-  font-weight: 600;
-
-  border-radius: 14px;
-  border: none;
-
-  background: #007aff;
-  color: white;
-
-  margin-top: 6px;
-}
-
-.swipe-wrapper {
-  position: relative;
-  overflow: hidden;
-  border-radius: 14px;
-}
-
-.swipe-bg {
-  position: absolute;
-  inset: 0;
-
-  display: flex;
-  align-items: center;
-
-  font-size: 13px;
-  font-weight: 600;
-
-  padding: 0 16px;
-
-  color: white;
-
-  border-radius: 14px;
-}
-.swipe-bg span {
-  font-size: 13px;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.swipe-bg {
-  pointer-events: none;
-}
-
-
-
-
+.modal { z-index: 99999; }
+.modal-content { z-index: 100000; }
+.topnav { z-index: 1000; }
+.fab { z-index: 1001; }
