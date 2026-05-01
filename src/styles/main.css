@@ -422,3 +422,127 @@ input[type="number"] {
   z-index: 10000;
 }
 
+/* =========================
+   MODAL FIX IOS (UI CLEAN)
+========================= */
+
+.modal-content {
+  width: 92%;
+  max-width: 420px;
+
+  background: #fff;
+  border-radius: 20px;
+
+  padding: 22px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  box-sizing: border-box;
+}
+
+/* evita desbordes raros */
+.modal-content * {
+  box-sizing: border-box;
+}
+
+/* INPUTS MÁS LIMPIOS */
+.input {
+  width: 100%;
+  padding: 14px 16px;
+
+  font-size: 16px;
+
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.12);
+
+  background: #fff;
+
+  outline: none;
+}
+
+/* FIX ESPECÍFICO PARA DATE (EL PROBLEMA REAL) */
+input[type="date"] {
+  width: 100%;
+  max-width: 100%;
+
+  padding: 14px 16px;
+
+  font-size: 16px;
+
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.12);
+
+  background: #fff;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  overflow: hidden;
+}
+
+/* BOTÓN GUARDAR GRANDE IOS STYLE */
+.save {
+  width: 100%;
+
+  padding: 16px;
+
+  border-radius: 14px;
+  border: none;
+
+  font-size: 17px;
+  font-weight: 600;
+
+  background: #007aff;
+  color: white;
+
+  margin-top: 6px;
+
+  box-shadow: 0 8px 20px rgba(0,122,255,0.25);
+}
+
+/* efecto press iOS */
+.save:active {
+  transform: scale(0.98);
+}
+
+/* CLOSE BUTTON MÁS BONITO */
+.close {
+  align-self: flex-end;
+
+  font-size: 24px;
+  border: none;
+  background: transparent;
+
+  color: #8e8e93;
+}
+
+/* spacing interno modal más consistente */
+.modal-content h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999; /* 👈 CLAVE */
+}
+
+.topnav {
+  z-index: 1000;
+}
+
+.fab {
+  z-index: 1001;
+}
+
+
