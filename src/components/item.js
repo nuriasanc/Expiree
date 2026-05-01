@@ -1,23 +1,23 @@
 function createItemElement(item) {
 
-  let d = diasRestantes(item.fecha_caducidad);
+  const wrapper = document.createElement("div");
+  wrapper.className = "swipe-wrapper";
 
-  let div = document.createElement("div");
-  div.className = "item";
+  const bg = document.createElement("div");
+  bg.className = "swipe-bg";
+  bg.innerHTML = `<span>Eliminar</span>`;
 
-  if (d <= 5) div.classList.add("rojo");
+  const card = document.createElement("div");
+  card.className = "item";
 
-  div.innerHTML = `
-    <div class="content">
-      <b>${item.nombre}</b>
-      <div>Cant: ${item.cantidad}</div>
-      <div>${item.abierto ? "Abierto" : "Cerrado"}</div>
-      <div>${item.plan ? "📅 " + item.plan : ""}</div>
-      <div>${item.fecha_caducidad ? "Caduca en " + d + " días" : ""}</div>
-    </div>
+  card.innerHTML = `
+    <div class="item-name">${item.nombre}</div>
   `;
 
-  applySwipe(div, item);
+  wrapper.appendChild(bg);
+  wrapper.appendChild(card);
 
-  return div;
+  addSwipe(wrapper, item.id);
+
+  return wrapper;
 }
