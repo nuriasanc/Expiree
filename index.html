@@ -119,6 +119,24 @@
   <button onclick="changeQty(1)">+</button>
 </div>
 
+  <div id="editModal" class="modal hidden">
+  <div class="modal-content">
+
+    <h3>Editar</h3>
+
+    <input id="editNombre" class="input">
+
+    <div class="qty-row">
+      <button onclick="editQty(-1)">-</button>
+      <span id="editQtyValue">1</span>
+      <button onclick="editQty(1)">+</button>
+    </div>
+
+    <button onclick="saveEdit()">Guardar</button>
+
+  </div>
+</div>
+
 <!-- SCRIPTS -->
 <script src="src/js/db.js"></script>
 <script src="src/js/auth.js"></script>
