@@ -545,4 +545,65 @@ input[type="date"] {
   z-index: 1001;
 }
 
+.modal-content input[type="date"] {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.save {
+  width: 100%;
+  padding: 14px 16px;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  border-radius: 14px;
+  border: none;
+
+  background: #007aff;
+  color: white;
+
+  margin-top: 6px;
+}
+
+.swipe-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.swipe-bg {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  padding: 0 16px;
+
+  color: white;
+
+  border-radius: 14px;
+}
+.swipe-bg span {
+  font-size: 13px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.swipe-bg {
+  pointer-events: none;
+}
+
+
+
 
