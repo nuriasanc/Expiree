@@ -273,3 +273,63 @@ async function deleteItem(id){
       console.error("Error eliminando");
     }
 }
+
+
+function addSwipe(wrapper, itemId) {
+
+  let startX = 0;
+  let currentX = 0;
+  let dragging = false;
+
+  const card = wrapper.querySelector(".item");
+  const bg = wrapper.querySelector(".swipe-bg");
+
+  wrapper.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    dragging = true;
+    card.style.transition = "none"; // sin lag
+  });
+
+  wrapper.addEventListener("touchmove", (e) => {
+
+    if (!dragging) return;
+
+    currentX = e.touches[0].clientX - startX;
+
+    if (currentX < 0) {
+
+      // mover tarjeta
+      card.style.transform = `translateX(${currentX}px)`;
+
+      // rojo progresivo
+      const progress = Math.min(Math.abs(currentX) / 120, 1);
+      bg.style.opacity = progress;
+    }
+  });
+
+  wrapper.addEventListener("touchend", async () => {
+
+    dragging = false;
+    card.style.transition = "transform 0.2s ease";
+
+    // 🔴 umbral tipo Gmail
+    if (currentX < -120) {
+
+      // animación completa
+      card.style.transform = "translateX(-100%)";
+      bg.style.opacity = 1;
+
+      setTimeout(async () => {
+        await deleteItem(itemId);
+        loadItems();
+      }, 200);
+
+    } else {
+      // volver a posición
+      card.style.transform = "translateX(0)";
+      bg.style.opacity = 0;
+    }
+
+    currentX = 0;
+  });
+}
