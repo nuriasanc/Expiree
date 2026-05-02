@@ -334,3 +334,89 @@ input[type="date"] {
 .modal-content { z-index: 100000; }
 .topnav { z-index: 1000; }
 .fab { z-index: 1001; }
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  height: 70px;
+
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(20px);
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  border-top: 0.5px solid rgba(0,0,0,0.1);
+
+  z-index: 1000;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  font-size: 18px;
+  color: #8e8e93;
+}
+
+.nav-btn.active {
+  color: #007aff;
+}
+
+/* =========================
+   CALENDAR
+========================= */
+
+#calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.calendar-day {
+  background: white;
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.day-header {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.day-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.calendar-item {
+  background: #f2f2f7;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.add-day-btn {
+  margin-top: 8px;
+  width: 100%;
+  padding: 10px;
+
+  border-radius: 10px;
+  border: none;
+
+  background: #007aff;
+  color: white;
+}
