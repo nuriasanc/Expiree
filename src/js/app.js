@@ -1,11 +1,25 @@
 let items = [];
 let selectedCat = null;
 let qty = 1;
+let meals = [];
 let openItemId = null;
 
 /* =========================
    RENDER
 ========================= */
+
+function diasRestantes(item) {
+
+  if (item.abierto && item.dias_caducidad != null) {
+    return item.dias_caducidad;
+  }
+
+  if (!item.fecha_caducidad) return 9999;
+
+  return Math.ceil((new Date(item.fecha_caducidad) - new Date()) / 86400000);
+}
+
+
 
 window.render = function () {
 
@@ -157,20 +171,22 @@ window.saveItem = async function () {
 
 async function loadItems() {
 
-  const { data, error } = await supabaseClient
+  const { data: itemsData } = await supabaseClient
     .from("items")
+    .select("*")
+    .eq("user_id", user.id);
+
+  const { data: mealsData } = await supabaseClient
+    .from("meal_plan")
     .select(`
       *,
-      contenedores (nombre)
+      items (*)
     `)
     .eq("user_id", user.id);
 
-  if (error) {
-    console.error(error);
-    return;
-  }
+  items = itemsData || [];
+  meals = mealsData || [];
 
-  items = data || [];
   render();
 }
 
@@ -372,22 +388,45 @@ function renderCalendar() {
     const fecha = new Date();
     fecha.setDate(hoy.getDate() + i);
 
+    const fechaISO = fecha.toISOString().split("T")[0];
+
     const dia = document.createElement("div");
     dia.className = "calendar-day";
+
+    const mealsDia = meals.filter(m => m.fecha === fechaISO);
 
     dia.innerHTML = `
       <div class="day-header">
         ${fecha.toLocaleDateString("es-ES", { weekday: "short", day: "numeric" })}
       </div>
 
-      <div class="day-content" id="day-${i}"></div>
+      <div class="day-content"></div>
 
-      <button class="add-day-btn" onclick="addToDay(${i})">+</button>
+      <button class="add-day-btn" onclick="openMealModal('${fechaISO}')">
+        + Añadir comida
+      </button>
     `;
 
     container.appendChild(dia);
+
+    const cont = dia.querySelector(".day-content");
+
+    mealsDia.forEach(m => {
+
+      const el = document.createElement("div");
+      el.className = "calendar-item";
+
+      el.innerHTML = `
+        <b>${m.items.nombre}</b>
+        <small>${m.tipo || ""}</small>
+      `;
+
+      cont.appendChild(el);
+    });
   }
 }
+
+
 function addToDay(dayIndex) {
 
   const nombre = prompt("¿Qué vas a comer?");
@@ -402,3 +441,106 @@ function addToDay(dayIndex) {
 
   div.appendChild(item);
 }
+
+
+
+
+
+
+
+let selectedMealDate = null;
+
+function openSelectFood(date) {
+
+  selectedMealDate = date;
+
+  const nombres = items.map(i => `${i.id}||${i.nombre}`);
+
+  const seleccion = prompt(
+    "Elige alimento:\n\n" +
+    nombres.map(n => n.split("||")[1]).join("\n")
+  );
+
+  if (!seleccion) return;
+
+  const item = items.find(i => i.nombre === seleccion);
+
+  if (!item) return;
+
+  assignMeal(item.id, date);
+}
+
+async function assignMeal(itemId, date) {
+
+  await supabaseClient
+    .from("items")
+    .update({ meal_date: date })
+    .eq("id", itemId);
+
+  loadItems();
+}
+let selectedDate = null;
+
+function openMealModal(date) {
+
+  selectedDate = date;
+
+  const modal = document.getElementById("mealModal");
+  const list = document.getElementById("foodList");
+
+  modal.classList.remove("hidden");
+
+  // 🔥 ordenar por caducidad (SUGERENCIA INTELIGENTE)
+  const sorted = [...items].sort((a, b) => {
+
+    const da = diasRestantes(a);
+    const db = diasRestantes(b);
+
+    return da - db;
+  });
+
+  list.innerHTML = "";
+
+  sorted.forEach(item => {
+
+    const el = document.createElement("div");
+    el.className = "food-option";
+
+    const dias = diasRestantes(item);
+
+    el.innerHTML = `
+      <b>${item.nombre}</b>
+      <small>${dias} días</small>
+    `;
+
+    el.onclick = () => selectMeal(item.id);
+
+    list.appendChild(el);
+  });
+}
+
+
+async function selectMeal(itemId) {
+
+  const tipo = document.getElementById("mealType").value;
+
+  await supabaseClient
+    .from("meal_plan")
+    .insert([{
+      user_id: user.id,
+      item_id: itemId,
+      fecha: selectedDate,
+      tipo: tipo
+    }]);
+
+  closeMealModal();
+  loadItems();
+}
+
+function closeMealModal() {
+  document.getElementById("mealModal").classList.add("hidden");
+}
+
+
+
+
