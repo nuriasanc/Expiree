@@ -341,3 +341,61 @@ async function confirmOpen() {
 function closeOpenModal() {
   document.getElementById("openModal").classList.add("hidden");
 }
+
+function showTab(tabId) {
+
+  document.querySelectorAll(".tab").forEach(t => t.classList.add("hidden"));
+
+  document.getElementById(tabId).classList.remove("hidden");
+
+  document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+
+  event.currentTarget.classList.add("active");
+
+  if (tabId === "calendarTab") {
+    renderCalendar();
+  }
+}
+
+function renderCalendar() {
+
+  const container = document.getElementById("calendar");
+  container.innerHTML = "";
+
+  const hoy = new Date();
+
+  for (let i = 0; i < 7; i++) {
+
+    const fecha = new Date();
+    fecha.setDate(hoy.getDate() + i);
+
+    const dia = document.createElement("div");
+    dia.className = "calendar-day";
+
+    dia.innerHTML = `
+      <div class="day-header">
+        ${fecha.toLocaleDateString("es-ES", { weekday: "short", day: "numeric" })}
+      </div>
+
+      <div class="day-content" id="day-${i}"></div>
+
+      <button class="add-day-btn" onclick="addToDay(${i})">+</button>
+    `;
+
+    container.appendChild(dia);
+  }
+}
+function addToDay(dayIndex) {
+
+  const nombre = prompt("¿Qué vas a comer?");
+
+  if (!nombre) return;
+
+  const div = document.getElementById("day-" + dayIndex);
+
+  const item = document.createElement("div");
+  item.className = "calendar-item";
+  item.innerText = nombre;
+
+  div.appendChild(item);
+}
