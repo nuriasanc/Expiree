@@ -159,7 +159,10 @@ async function loadItems() {
 
   const { data, error } = await supabaseClient
     .from("items")
-    .select(`*, contenedores(nombre)`)
+    .select(`
+      *,
+      contenedores (nombre)
+    `)
     .eq("user_id", user.id);
 
   if (error) {
