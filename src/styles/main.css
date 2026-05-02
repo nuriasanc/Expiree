@@ -420,3 +420,27 @@ input[type="date"] {
   background: #007aff;
   color: white;
 }
+
+#foodList {
+  max-height: 250px;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.food-option {
+  background: #f2f2f7;
+  padding: 12px;
+  border-radius: 10px;
+
+  display: flex;
+  justify-content: space-between;
+
+  cursor: pointer;
+}
+
+.food-option:active {
+  transform: scale(0.98);
+}
