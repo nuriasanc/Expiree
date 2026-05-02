@@ -1,11 +1,12 @@
 let items = [];
+let meals = [];
 let selectedCat = null;
 let qty = 1;
-let meals = [];
 let openItemId = null;
+let selectedDate = null;
 
 /* =========================
-   RENDER
+   UTIL
 ========================= */
 
 function diasRestantes(item) {
@@ -19,23 +20,18 @@ function diasRestantes(item) {
   return Math.ceil((new Date(item.fecha_caducidad) - new Date()) / 86400000);
 }
 
-
+/* =========================
+   RENDER
+========================= */
 
 window.render = function () {
 
   const lista = document.getElementById("lista");
   lista.innerHTML = "";
 
-  const hoy = new Date();
-
-  function diasRestantes(fecha) {
-    if (!fecha) return 9999;
-    return Math.ceil((new Date(fecha) - hoy) / 86400000);
-  }
-
   // 🔴 URGENTES
   const urgentes = items
-    .filter(i => i.fecha_caducidad && diasRestantes(i.fecha_caducidad) <= 4)
+    .filter(i => i.fecha_caducidad && diasRestantes(i) <= 4)
     .sort((a, b) => new Date(a.fecha_caducidad) - new Date(b.fecha_caducidad));
 
   if (urgentes.length) {
@@ -105,7 +101,7 @@ function showLogin() {
 }
 
 /* =========================
-   MODAL
+   MODAL ADD
 ========================= */
 
 function openModal() {
@@ -127,10 +123,6 @@ function clearModal() {
   document.querySelectorAll(".cat").forEach(c => c.classList.remove("selected"));
   document.getElementById("modalError").innerText = "";
 }
-
-/* =========================
-   CATEGORIA
-========================= */
 
 function setCat(id) {
 
@@ -166,7 +158,7 @@ window.saveItem = async function () {
 };
 
 /* =========================
-   LOAD ITEMS
+   LOAD DATA
 ========================= */
 
 async function loadItems() {
@@ -209,11 +201,18 @@ function createItemElement(item) {
     ? new Date(item.fecha_caducidad).toLocaleDateString()
     : "Sin fecha";
 
+  const meal = meals.find(m => m.item_id === item.id);
+
+  const mealText = meal
+    ? `📅 ${new Date(meal.fecha).toLocaleDateString("es-ES", { weekday: "short" })}`
+    : "";
+
   card.innerHTML = `
     <div class="item-name">${item.nombre} (${item.cantidad || 1})</div>
     <div class="item-date">${fecha}</div>
     <div class="item-cat">${getCatName(item.contenedor_id)}</div>
     <div class="item-status">${item.abierto ? "🟢 Abierto" : "🔒 Cerrado"}</div>
+    ${mealText ? `<div class="item-meal">${mealText}</div>` : ""}
   `;
 
   wrapper.appendChild(bg);
@@ -231,7 +230,7 @@ function getCatName(id) {
 }
 
 /* =========================
-   SWIPE (FINAL BUENO)
+   SWIPE
 ========================= */
 
 function addSwipe(wrapper, itemId) {
@@ -255,6 +254,8 @@ function addSwipe(wrapper, itemId) {
 
     currentX = e.touches[0].clientX - startX;
 
+    const item = items.find(i => i.id === itemId);
+
     if (currentX < 0) {
       card.style.transform = `translateX(${currentX}px)`;
       bg.style.background = "#ff3b30";
@@ -264,8 +265,15 @@ function addSwipe(wrapper, itemId) {
 
     if (currentX > 0) {
       card.style.transform = `translateX(${currentX}px)`;
-      bg.style.background = "#34c759";
-      bg.innerText = "Abrir";
+
+      if (item.abierto) {
+        bg.innerText = "Cerrar";
+        bg.style.background = "#ff9500";
+      } else {
+        bg.innerText = "Abrir";
+        bg.style.background = "#34c759";
+      }
+
       bg.style.opacity = Math.min(currentX / 120, 1);
     }
   });
@@ -274,6 +282,8 @@ function addSwipe(wrapper, itemId) {
 
     dragging = false;
     card.style.transition = "transform 0.2s ease";
+
+    const item = items.find(i => i.id === itemId);
 
     if (currentX < -120) {
 
@@ -289,11 +299,14 @@ function addSwipe(wrapper, itemId) {
 
     if (currentX > 120) {
 
-      openOpenModal(itemId);
+      if (item.abierto) {
+        await closeItem(itemId);
+      } else {
+        openOpenModal(itemId);
+      }
 
       card.style.transform = "translateX(0)";
       bg.style.opacity = 0;
-
       return;
     }
 
@@ -309,12 +322,24 @@ function addSwipe(wrapper, itemId) {
 ========================= */
 
 async function deleteItem(id) {
-  const { error } = await supabaseClient
-    .from('items')
-    .delete()
+  await supabaseClient.from('items').delete().eq("id", id);
+}
+
+/* =========================
+   CLOSE ITEM
+========================= */
+
+async function closeItem(id) {
+
+  await supabaseClient
+    .from("items")
+    .update({
+      abierto: false,
+      dias_caducidad: null
+    })
     .eq("id", id);
 
-  if (error) console.error("Error eliminando", error);
+  loadItems();
 }
 
 /* =========================
@@ -327,12 +352,16 @@ function changeQty(n) {
 }
 
 /* =========================
-   ABRIR ITEM
+   OPEN ITEM MODAL
 ========================= */
 
 function openOpenModal(id) {
   openItemId = id;
   document.getElementById("openModal").classList.remove("hidden");
+}
+
+function closeOpenModal() {
+  document.getElementById("openModal").classList.add("hidden");
 }
 
 async function confirmOpen() {
@@ -350,16 +379,15 @@ async function confirmOpen() {
     })
     .eq("id", openItemId);
 
-  document.getElementById("openModal").classList.add("hidden");
+  closeOpenModal();
   diasInput.value = "";
 
   loadItems();
 }
 
-
-function closeOpenModal() {
-  document.getElementById("openModal").classList.add("hidden");
-}
+/* =========================
+   TABS
+========================= */
 
 function showTab(tabId) {
 
@@ -375,6 +403,10 @@ function showTab(tabId) {
     renderCalendar();
   }
 }
+
+/* =========================
+   CALENDAR
+========================= */
 
 function renderCalendar() {
 
@@ -426,60 +458,9 @@ function renderCalendar() {
   }
 }
 
-
-function addToDay(dayIndex) {
-
-  const nombre = prompt("¿Qué vas a comer?");
-
-  if (!nombre) return;
-
-  const div = document.getElementById("day-" + dayIndex);
-
-  const item = document.createElement("div");
-  item.className = "calendar-item";
-  item.innerText = nombre;
-
-  div.appendChild(item);
-}
-
-
-
-
-
-
-
-let selectedMealDate = null;
-
-function openSelectFood(date) {
-
-  selectedMealDate = date;
-
-  const nombres = items.map(i => `${i.id}||${i.nombre}`);
-
-  const seleccion = prompt(
-    "Elige alimento:\n\n" +
-    nombres.map(n => n.split("||")[1]).join("\n")
-  );
-
-  if (!seleccion) return;
-
-  const item = items.find(i => i.nombre === seleccion);
-
-  if (!item) return;
-
-  assignMeal(item.id, date);
-}
-
-async function assignMeal(itemId, date) {
-
-  await supabaseClient
-    .from("items")
-    .update({ meal_date: date })
-    .eq("id", itemId);
-
-  loadItems();
-}
-let selectedDate = null;
+/* =========================
+   MEAL MODAL
+========================= */
 
 function openMealModal(date) {
 
@@ -490,14 +471,7 @@ function openMealModal(date) {
 
   modal.classList.remove("hidden");
 
-  // 🔥 ordenar por caducidad (SUGERENCIA INTELIGENTE)
-  const sorted = [...items].sort((a, b) => {
-
-    const da = diasRestantes(a);
-    const db = diasRestantes(b);
-
-    return da - db;
-  });
+  const sorted = [...items].sort((a, b) => diasRestantes(a) - diasRestantes(b));
 
   list.innerHTML = "";
 
@@ -506,11 +480,9 @@ function openMealModal(date) {
     const el = document.createElement("div");
     el.className = "food-option";
 
-    const dias = diasRestantes(item);
-
     el.innerHTML = `
       <b>${item.nombre}</b>
-      <small>${dias} días</small>
+      <small>${diasRestantes(item)} días</small>
     `;
 
     el.onclick = () => selectMeal(item.id);
@@ -518,7 +490,6 @@ function openMealModal(date) {
     list.appendChild(el);
   });
 }
-
 
 async function selectMeal(itemId) {
 
@@ -540,7 +511,3 @@ async function selectMeal(itemId) {
 function closeMealModal() {
   document.getElementById("mealModal").classList.add("hidden");
 }
-
-
-
-
