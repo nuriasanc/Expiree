@@ -168,6 +168,28 @@
   </div>
 </div>
 
+  <div id="mealModal" class="modal hidden">
+  <div class="modal-content">
+
+    <button class="close" onclick="closeMealModal()">×</button>
+
+    <h3>Seleccionar alimento</h3>
+
+    <input id="searchFood" class="input" placeholder="Buscar...">
+
+    <div id="foodList"></div>
+
+    <select id="mealType" class="input">
+      <option value="">Tipo (opcional)</option>
+      <option value="Desayuno">Desayuno</option>
+      <option value="Comida">Comida</option>
+      <option value="Cena">Cena</option>
+    </select>
+
+  </div>
+</div>
+  
+
 <!-- SCRIPTS -->
 <script src="src/js/db.js"></script>
 <script src="src/js/auth.js"></script>
