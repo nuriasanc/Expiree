@@ -336,3 +336,8 @@ async function confirmOpen() {
 
   loadItems();
 }
+
+
+function closeOpenModal() {
+  document.getElementById("openModal").classList.add("hidden");
+}
