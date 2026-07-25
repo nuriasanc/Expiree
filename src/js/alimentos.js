@@ -64,6 +64,8 @@ window.loadItems =  async function ()  {
 /* =========================
    ITEM UI
 ========================= */
+
+
 function createItemElement(item) {
 
     const wrapper = document.createElement("div");
@@ -79,30 +81,60 @@ function createItemElement(item) {
         ? diasRestantes(item)
         : "-";
 
+        console.log("hola qu etal");
     card.innerHTML = `
         <div class="alimento-titulo">
             <h3>${item.nombre}</h3>
-            <span
-    class="estado ${item.abierto ? "abierto" : "cerrado"}"
- onclick="toggleEstado('${item.id}')">
-    ${item.abierto ? "Abierto" : "Cerrado"}
-</span>
+
+            <div class="acciones-alimento">
+
+                <span
+                    class="estado ${item.abierto ? "abierto" : "cerrado"}"
+                    onclick="toggleEstado('${item.id}')">
+                    ${item.abierto ? "Abierto" : "Cerrado"}
+                </span>
+
+                ${!esMovil() ? `
+                    <button class="btn-eliminar" onclick="eliminarItem('${item.id}')">
+                        x
+                    </button>
+                ` : ""}
+
+            </div>
         </div>
 
         <div class="alimento-info">
-            <span> ${item.cantidad || 1} unidad${item.cantidad > 1 ? "es" : ""}</span>
-            <div class='dias'>
-            
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days-icon lucide-calendar-days"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
-             <span> ${dias} días</span>
-        </div>
+            <span>${item.cantidad || 1} unidad${item.cantidad > 1 ? "es" : ""}</span>
+
+            <div class="dias">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-calendar-days">
+                    <path d="M8 2v4"/>
+                    <path d="M16 2v4"/>
+                    <rect width="18" height="18" x="3" y="4" rx="2"/>
+                    <path d="M3 10h18"/>
+                    <path d="M8 14h.01"/>
+                    <path d="M12 14h.01"/>
+                    <path d="M16 14h.01"/>
+                    <path d="M8 18h.01"/>
+                    <path d="M12 18h.01"/>
+                    <path d="M16 18h.01"/>
+                </svg>
+
+                <span>${dias} días</span>
+            </div>
         </div>
     `;
 
     wrapper.appendChild(bg);
     wrapper.appendChild(card);
 
-    addSwipe(wrapper, item.id);
+    if (esMovil()) {
+        addSwipe(wrapper, item.id);
+    }
 
     return wrapper;
 }
@@ -255,9 +287,7 @@ const nombre =
 
 titulo.innerHTML = `
     <span>${nombre}</span>
-    <span class="flecha">
-        ${secciones[cat] ? "⌄" : "›"}
-    </span>
+    <i data-lucide="${secciones[cat] ? "chevron-down" : "chevron-right"}" class="flecha"></i>
 `;
 
 titulo.onclick = () => toggleSeccion(cat);
@@ -336,5 +366,10 @@ async function toggleEstado(id) {
         return;
     }
 
+    loadItems();
+}
+
+async function eliminarItem(id) {
+    await deleteItem(id);
     loadItems();
 }

@@ -1,90 +1,92 @@
-/*function applySwipe(div, item) {
+function esMovil() {
+    return window.matchMedia("(max-width: 768px)").matches;
+}
 
+
+/* =========================
+   SWIPE
+========================= */
+
+function addSwipe(wrapper, itemId) {
+  if (!esMovil()) return;
   let startX = 0;
   let currentX = 0;
   let dragging = false;
 
-  // 👉 fondo
-  let bg = document.createElement("div");
-  bg.className = "swipe-bg";
-  div.appendChild(bg);
+  const card = wrapper.querySelector(".item");
+  const bg = wrapper.querySelector(".swipe-bg");
 
-  /* =========================
-     TOUCH START
-  ========================= 
-  div.addEventListener("touchstart", e => {
+  wrapper.addEventListener("touchstart", (e) => {
     startX = e.touches[0].clientX;
     dragging = true;
-    div.style.transition = "none";
+    card.style.transition = "none";
   });
 
-  /* =========================
-     TOUCH MOVE
-  ========================= 
-  div.addEventListener("touchmove", e => {
+  wrapper.addEventListener("touchmove", (e) => {
 
     if (!dragging) return;
 
     currentX = e.touches[0].clientX - startX;
 
-    div.style.transform = `translateX(${currentX}px)`;
+    const item = items.find(i => i.id === itemId);
 
-    // 👉 IZQUIERDA = ELIMINAR
     if (currentX < 0) {
+      card.style.transform = `translateX(${currentX}px)`;
       bg.style.background = "#ff3b30";
       bg.innerText = "Eliminar";
-
       bg.style.opacity = Math.min(Math.abs(currentX) / 120, 1);
     }
 
-    // 👉 DERECHA = ABRIR
     if (currentX > 0) {
-      bg.style.background = "#34c759";
-      bg.innerText = "Abrir";
+      card.style.transform = `translateX(${currentX}px)`;
+
+      if (item.abierto) {
+        bg.innerText = "Cerrar";
+        bg.style.background = "#ff9500";
+      } else {
+        bg.innerText = "Abrir";
+        bg.style.background = "#34c759";
+      }
 
       bg.style.opacity = Math.min(currentX / 120, 1);
     }
   });
 
-  /* =========================
-     TOUCH END
-  ========================= 
-  div.addEventListener("touchend", async () => {
+  wrapper.addEventListener("touchend", async () => {
 
     dragging = false;
-    div.style.transition = "transform 0.2s ease";
+    card.style.transition = "transform 0.2s ease";
 
-    // 🔴 ELIMINAR
+    const item = items.find(i => i.id === itemId);
+
     if (currentX < -120) {
 
-      div.style.transform = "translateX(-100%)";
+      card.style.transform = "translateX(-100%)";
 
       setTimeout(async () => {
-        await deleteItemDB(item.id);
+        await deleteItem(itemId);
         loadItems();
       }, 200);
 
       return;
     }
 
-    // 🟢 ABRIR
     if (currentX > 120) {
 
-      openOpenModal(item.id);
+      if (item.abierto) {
+        await closeItem(itemId);
+      } else {
+        openOpenModal(itemId);
+      }
 
-      div.style.transform = "translateX(0)";
+      card.style.transform = "translateX(0)";
       bg.style.opacity = 0;
-
       return;
     }
 
-    // 👉 volver a sitio
-    div.style.transform = "translateX(0)";
+    card.style.transform = "translateX(0)";
     bg.style.opacity = 0;
-    bg.innerText = "";
 
     currentX = 0;
   });
 }
-
-*/
