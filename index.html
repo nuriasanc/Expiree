@@ -18,250 +18,46 @@
 
 <body>
 
-<!-- LOADER -->
-<div id="bootScreen" class="boot-screen">
-  <div class="spinner"></div>
-</div>
 
-<!-- LOGIN -->
-<div id="auth" class="auth hidden">
 
-  <div class="auth-content">
 
-    <input id="email" class="input" type="email" placeholder="Email">
-    <input id="password" class="input" type="password" placeholder="Contraseña">
+ <div class="modal">
 
-    <div id="authError" class="error"></div>
+    <div class="modal-anadir-alimentos">
 
-    <div class="buttons">
-      <button class="btn primary" onclick="login()">Entrar</button>
-      <button class="btn secondary" onclick="signup()">Crear cuenta</button>
+        <div class="cabecera-modal">
+            <h3>Añadir alimento</h3>
+            <button class="cerrar">✕</button>
+        </div>
+
+        <div class="modal-body">
+
+            <input type="text" placeholder="Alimento">
+
+            <div class="botonera">
+                <button class="frigo">Frigorífico</button>
+                <button class="conge">Congelador</button>
+                <button class="despe">Despensa</button>
+            </div>
+
+            <div class="botonera-2">
+                <input type="date">
+                <input type="number" placeholder="Cant">
+            </div>
+
+            <button class="addBtn">Añadir</button>
+
+        </div>
+
     </div>
 
-  </div>
 </div>
 
-<!-- APP -->
-<div id="app" class="container hidden">
 
-  <!-- TOP NAV -->
-  <div class="topnav">
 
-    <div class="brand">Expiree</div>
-
-    <div class="user-menu" onclick="toggleMenu()">
-      <i data-lucide="user"></i>
-
-      <div id="dropdown" class="dropdown hidden">
-        <div class="user-email" id="userEmail"></div>
-        <button onclick="logout()">Cerrar sesión</button>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="bottom-nav">
-
-  <button class="nav-btn active" onclick="showTab('listaTab')">
-    🧊
+  <nav class="nav-footer">
     <span>Alimentos</span>
-  </button>
-
-  <button class="nav-btn" onclick="showTab('calendarTab')">
-    📅
     <span>Semana</span>
-  </button>
-
-</div>
-
-  <!-- LISTA -->
-  <div id="listaTab" class="tab">
-  <div id="lista"></div>
-</div>
-
-<div id="calendarTab" class="tab hidden">
-  <div id="calendar"></div>
-</div>
-
-</div>
-
-<!-- FAB -->
-<button id="addBtn" class="fab" onclick="openModal()">+</button>
-
-<!-- =========================
-     MODAL AÑADIR
-========================= -->
-<div id="modal" class="modal hidden">
-
-    <div class="modal-content">
-
-    <button class="close" onclick="closeModal()">×</button>
-
-            <button class="close" onclick="closeModal()">✕</button>
-        </div>
-
-        <input
-            id="nombre"
-            class="input"
-            placeholder="Nombre del alimento">
-
-        <div class="contenedores">
-
-            <button class="cat congelador" id="cat1" onclick="setCat(1)">
-
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m10 20-1.25-2.5L6 18"/>
-                    <path d="M10 4 8.75 6.5 6 6"/>
-                    <path d="m14 20 1.25-2.5L18 18"/>
-                    <path d="m14 4 1.25 2.5L18 6"/>
-                    <path d="m17 21-3-6h-4"/>
-                    <path d="m17 3-3 6 1.5 3"/>
-                    <path d="M2 12h6.5L10 9"/>
-                    <path d="m20 10-1.5 2 1.5 2"/>
-                    <path d="M22 12h-6.5L14 15"/>
-                    <path d="m4 10 1.5 2L4 14"/>
-                    <path d="m7 21 3-6-1.5-3"/>
-                    <path d="m7 3 3 6h4"/>
-                </svg>
-
-                <small>Congelador</small>
-
-            </button>
-
-            <button class="cat frigorifico" id="cat2" onclick="setCat(2)">
-
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M5 6a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6Z"/>
-                    <path d="M5 10h14"/>
-                    <path d="M15 7v6"/>
-                </svg>
-
-                <small>Frigorífico</small>
-
-            </button>
-
-            <button class="cat despensa" id="cat3" onclick="setCat(3)">
-
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M10 22v-8"/>
-                    <path d="M2.336 8.89 10 14l11.715-7.029"/>
-                    <path d="M22 14a2 2 0 0 1-.971 1.715l-10 6a2 2 0 0 1-2.138-.05l-6-4A2 2 0 0 1 2 16v-6a2 2 0 0 1 .971-1.715l10-6a2 2 0 0 1 2.138.05l6 4A2 2 0 0 1 22 8z"/>
-                </svg>
-
-                <small>Despensa</small>
-
-            </button>
-
-        </div>
-
-        <input
-            id="fecha"
-            type="date"
-            class="input">
-
-        <div class="cantidad-row">
-
-            <input
-                id="cantidad"
-                type="number"
-                min="1"
-                value="1"
-                class="input cantidad"
-                placeholder="Cantidad">
-
-            <select
-                id="unidad"
-                class="input unidad">
-
-                <option value="uds">uds</option>
-                <option value="kg">kg</option>
-                <option value="g">g</option>
-                <option value="l">l</option>
-                <option value="ml">ml</option>
-
-            </select>
-
-        </div>
-
-        <button class="save" onclick="saveItem()">
-            Añadir alimento
-        </button>
-
-        <p id="modalError" class="error"></p>
-
-    </div>
-
-</div>
-
-<!-- =========================
-     MODAL EDITAR
-========================= -->
-<div id="editModal" class="modal hidden">
-
-  <div class="modal-content">
-
-    <h3>Editar</h3>
-
-    <input id="editNombre" class="input">
-
-    <div class="qty-row">
-      <button onclick="editQty(-1)">-</button>
-      <span id="editQtyValue">1</span>
-      <button onclick="editQty(1)">+</button>
-    </div>
-
-    <button onclick="saveEdit()">Guardar</button>
-
-  </div>
-</div>
-
-<!-- =========================
-     MODAL ABRIR
-========================= -->
-<div id="openModal" class="modal hidden">
-  <div class="modal-content">
-
-    <!-- cerrar -->
-    <button class="close" onclick="closeOpenModal()">×</button>
-
-    <h3>Abrir alimento</h3>
-
-    <input id="diasInput" type="number" class="input" placeholder="Días hasta caducar">
-
-    <button class="save" onclick="confirmOpen()">Guardar</button>
-
-  </div>
-</div>
-
-  <div id="mealModal" class="modal hidden">
-  <div class="modal-content">
-
-    <button class="close" onclick="closeMealModal()">×</button>
-
-    <h3>Seleccionar alimento</h3>
-
-    <input id="searchFood" class="input" placeholder="Buscar...">
-
-    <div id="foodList"></div>
-
-    <select id="mealType" class="input">
-      <option value="">Tipo (opcional)</option>
-      <option value="Desayuno">Desayuno</option>
-      <option value="Comida">Comida</option>
-      <option value="Cena">Cena</option>
-    </select>
-
-  </div>
-</div>
-  
-
-<!-- SCRIPTS -->
-<script src="src/js/db.js"></script>
-<script src="src/js/auth.js"></script>
-<script src="src/js/ui.js"></script>
-<script src="src/js/swipe.js"></script>
-<script src="src/js/calendar.js"></script>
-<script src="src/js/app.js"></script>
-
+  </nav>
 </body>
-</html>
+
