@@ -1,12 +1,24 @@
 .nav-footer{
-  display: flex;
-  background-color: rgb(255, 219, 252);
-  width: 100%;
-  position: absolute;
-  top: 91%;
-  justify-content: space-around;
-  height: 5vh;
-  padding: 1vh;
+
+    position:fixed;
+
+    left:0;
+    right:0;
+    bottom:0;
+
+    height:70px;
+
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+
+    background:#fff;
+
+    border-top:1px solid #e5e5e5;
+
+    padding-bottom:env(safe-area-inset-bottom);
+
+    box-sizing:border-box;
 }
 
 .nav-footer span{
@@ -26,18 +38,22 @@ html, body {
   max-height: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
+  margin:0;
+    padding:0;
 }
 .hidden{
     display:none !important;
 }
 
 
+
 .button-anadir-alimento{
 
+padding-bottom:env(safe-area-inset-bottom);
     position: fixed;
 
-    right: 30px;
-    bottom: 100px;
+  bottom:90px;
+right:20px;
 
     width: 60px;
     height: 60px;
@@ -70,9 +86,14 @@ html, body {
 }
 
 .pantalla{
-  height: 86vh;
-  width: 93%;
-  position: absolute;
-  top: 5vh;
-  padding: 2vh;
+    width:100%;
+    max-width:700px;
+
+    margin:0 auto;
+
+    padding:20px;
+
+    box-sizing:border-box;
+
+    min-height:calc(100vh - 90px);
 }
