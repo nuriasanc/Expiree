@@ -69,6 +69,19 @@ function toggleMenu(){
     document.getElementById("menu").classList.toggle("hidden");
 
 }
+function actualizarUI(){
+
+    if(user){
+
+        document.getElementById("menu").style.display = "none";
+
+    }else{
+
+        document.getElementById("menu").style.display = "block";
+
+    }
+
+}
 
 
 function abrirModal() {

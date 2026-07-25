@@ -72,6 +72,7 @@ async function login() {
 
     user = data.user;
 
+     actualizarUI();
     startApp();
 
 }

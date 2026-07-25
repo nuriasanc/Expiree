@@ -37,8 +37,6 @@ window.saveItem = async function () {
 };
 function mismaFecha(fecha1, fecha2){
 
-    console.log("COMPARANDO:", fecha1, fecha2);
-
     return new Date(fecha1).toISOString().slice(0,10) === 
            new Date(fecha2).toISOString().slice(0,10);
 
@@ -66,7 +64,6 @@ window.loadItems = async function () {
 
   items = itemsData || [];
   meals = mealsData || [];
-console.log("COMIDAS:", meals);
   render();
 }
 
@@ -239,8 +236,6 @@ async function openMealModal(date) {
             m.item_id == item.id &&
             mismaFecha(m.fecha, selectedDate)
         );
-            console.log("hola")
-
 
         const seleccionado = !!comida;
 
