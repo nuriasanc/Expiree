@@ -367,6 +367,21 @@ function cerrarModal(){
 
 
 
+
+let cantidad = 1;
+
+function cambiarCantidad(valor){
+
+    cantidad += valor;
+
+    if(cantidad < 1){
+        cantidad = 1;
+    }
+
+    document.getElementById("cantidad").textContent = cantidad;
+
+}
+
 async function confirmOpen() {
 
   const dias = parseInt(diasInput.value);
