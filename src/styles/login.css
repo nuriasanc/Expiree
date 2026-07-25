@@ -1,0 +1,118 @@
+/* ---------- LOGIN ---------- */
+
+#login {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    gap: 18px;
+
+    padding: 24px;
+
+    background: #f5f5f7;
+}
+
+#login input {
+    width: 100%;
+    max-width: 360px;
+
+    padding: 16px 18px;
+
+    border: none;
+    border-radius: 16px;
+
+    background: white;
+
+    font-size: 16px;
+
+    outline: none;
+
+    box-sizing: border-box;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.05);
+}
+
+#login input:focus{
+    box-shadow:
+        0 0 0 3px rgba(0,122,255,.18),
+        0 6px 18px rgba(0,0,0,.08);
+}
+
+#login button{
+    width:100%;
+    max-width:360px;
+
+    padding:16px;
+
+    border:none;
+    border-radius:16px;
+
+    background:#007AFF;
+    color:white;
+
+    font-size:17px;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+#login button:hover{
+    background:#0067dd;
+}
+
+#login button:active{
+    transform:scale(.98);
+}
+
+#authError{
+    width:100%;
+    max-width:360px;
+
+    color:#ff3b30;
+
+    font-size:14px;
+
+    text-align:center;
+
+    min-height:18px;
+}
+
+/* Botón Crear cuenta */
+
+#login button:last-child{
+    background:#ececec;
+    color:#333;
+}
+
+#login button:last-child:hover{
+    background:#dddddd;
+}
+
+/* Móvil */
+
+@media (max-width:480px){
+
+    #login{
+        padding:20px;
+    }
+
+    #login input,
+    #login button{
+        max-width:100%;
+    }
+
+}
+#login h1{
+    font-size:42px;
+    font-weight:700;
+    margin-bottom:25px;
+    color:#111;
+    letter-spacing:-1px;
+}

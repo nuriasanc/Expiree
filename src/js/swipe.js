@@ -1,4 +1,4 @@
-function applySwipe(div, item) {
+/*function applySwipe(div, item) {
 
   let startX = 0;
   let currentX = 0;
@@ -11,7 +11,7 @@ function applySwipe(div, item) {
 
   /* =========================
      TOUCH START
-  ========================= */
+  ========================= 
   div.addEventListener("touchstart", e => {
     startX = e.touches[0].clientX;
     dragging = true;
@@ -20,7 +20,7 @@ function applySwipe(div, item) {
 
   /* =========================
      TOUCH MOVE
-  ========================= */
+  ========================= 
   div.addEventListener("touchmove", e => {
 
     if (!dragging) return;
@@ -48,7 +48,7 @@ function applySwipe(div, item) {
 
   /* =========================
      TOUCH END
-  ========================= */
+  ========================= 
   div.addEventListener("touchend", async () => {
 
     dragging = false;
@@ -86,3 +86,5 @@ function applySwipe(div, item) {
     currentX = 0;
   });
 }
+
+*/
