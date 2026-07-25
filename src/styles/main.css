@@ -210,3 +210,9 @@ header{
 .botonera button:not(.selected){
     opacity: .75;
 }
+
+.swipe-wrapper{
+    transition:
+        height .3s ease,
+        margin .3s ease;
+}

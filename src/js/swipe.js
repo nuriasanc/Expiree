@@ -99,24 +99,33 @@ function addSwipe(wrapper, itemId) {
 
 
     // deslizar suficiente -> borrar
-    if(currentX < -120){
+if (currentX < -120) {
+
+    card.style.transition = "transform .35s ease, opacity .35s ease";
+
+    card.style.transform = "translateX(-120%) scale(.95)";
+    card.style.opacity = "0";
+
+    wrapper.style.height = wrapper.offsetHeight + "px";
+
+    setTimeout(() => {
+
+        wrapper.style.transition = "height .3s ease, margin .3s ease";
+        wrapper.style.height = "0px";
+        wrapper.style.marginBottom = "0px";
+
+    }, 250);
 
 
-      card.style.transform =
-          "translateX(-120%)";
-
-
-      setTimeout(async()=>{
+    setTimeout(async () => {
 
         await deleteItem(itemId);
         loadItems();
 
-      },200);
+    }, 550);
 
-
-      return;
-    }
-
+    return;
+}
 
 
     // volver
