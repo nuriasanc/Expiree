@@ -1,0 +1,239 @@
+/* ==========================
+   MODAL
+========================== */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.35);
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    z-index:999;
+    backdrop-filter:blur(8px);
+}
+
+.modal.hidden{
+    display:none;
+}
+
+.modal-content{
+    width:100%;
+    max-width:480px;
+    background:#fff;
+    border-radius:28px 28px 0 0;
+    padding:24px;
+    box-sizing:border-box;
+    animation:modalUp .25s ease;
+}
+
+@keyframes modalUp{
+    from{
+        transform:translateY(100%);
+    }
+    to{
+        transform:translateY(0);
+    }
+}
+
+
+/* ==========================
+   CABECERA
+========================== */
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:22px;
+}
+
+.modal-header h3{
+    margin:0;
+    font-size:26px;
+    font-weight:700;
+    color:#111;
+}
+
+.close{
+    width:38px;
+    height:38px;
+    border:none;
+    border-radius:50%;
+    background:#F2F2F7;
+    color:#555;
+    font-size:24px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.close:hover{
+    background:#E5E5EA;
+}
+
+
+/* ==========================
+   INPUTS
+========================== */
+
+.input,
+select{
+    width:100%;
+    height:56px;
+    margin-bottom:16px;
+    padding:0 18px;
+    border-radius:16px;
+    border:1px solid #E5E5EA;
+    background:#F8F8F8;
+    font-size:17px;
+    box-sizing:border-box;
+    outline:none;
+    transition:.2s;
+}
+
+.input:focus,
+select:focus{
+    border-color:#007AFF;
+    background:#fff;
+}
+
+
+/* ==========================
+   BOTONES CATEGORÍAS
+========================== */
+
+.contenedores{
+    display:flex;
+    gap:14px;
+    margin-bottom:18px;
+}
+
+.cat{
+    flex:1;
+    border:none;
+    border-radius:20px;
+    padding:18px 10px;
+    cursor:pointer;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    transition:.2s;
+}
+
+.cat svg{
+    width:28px;
+    height:28px;
+}
+
+.cat small{
+    font-size:13px;
+    font-weight:600;
+}
+
+.congelador{
+    background:#0A84FF;
+}
+
+.frigorifico{
+    background:#34C759;
+}
+
+.despensa{
+    background:#FF9F0A;
+}
+
+.cat:hover{
+    transform:translateY(-2px);
+}
+
+.cat.active{
+    transform:scale(1.05);
+    box-shadow:0 10px 24px rgba(0,0,0,.18);
+}
+
+
+/* ==========================
+   CANTIDAD
+========================== */
+
+.cantidad-row{
+    display:flex;
+    gap:12px;
+}
+
+.cantidad{
+    flex:2;
+}
+
+.unidad{
+    flex:1;
+}
+
+
+/* ==========================
+   BOTÓN GUARDAR
+========================== */
+
+.save{
+    width:100%;
+    height:58px;
+    margin-top:8px;
+    border:none;
+    border-radius:18px;
+    background:#007AFF;
+    color:white;
+    font-size:18px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.save:hover{
+    background:#0066d6;
+}
+
+.save:active{
+    transform:scale(.98);
+}
+
+
+/* ==========================
+   ERROR
+========================== */
+
+.error{
+    color:#ff3b30;
+    text-align:center;
+    margin-top:14px;
+    font-size:14px;
+}
+
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media(max-width:480px){
+
+    .modal-content{
+        max-width:100%;
+        border-radius:26px 26px 0 0;
+        padding:22px;
+    }
+
+    .modal-header h3{
+        font-size:24px;
+    }
+
+    .cat{
+        padding:16px 8px;
+    }
+
+    .cat small{
+        font-size:12px;
+    }
+
+}
