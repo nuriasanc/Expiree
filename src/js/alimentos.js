@@ -1,4 +1,8 @@
-
+let secciones = {
+    1: true,
+    2: true,
+    3: true
+};
 function setCat(id) {
 
   selectedCat = id;
@@ -241,18 +245,32 @@ lista.appendChild(el);
 
     if (!grupo.length) return;
 
-    const titulo = document.createElement("h3");
+   const titulo = document.createElement("div");
+titulo.className = "titulo-seccion";
 
-    titulo.textContent =
-      cat === 1 ? "Nevera" :
-      cat === 2 ? "Congelador" :
-      "Despensa";
+const nombre =
+    cat === 1 ? "Nevera" :
+    cat === 2 ? "Congelador" :
+    "Despensa";
+
+titulo.innerHTML = `
+    <span>${nombre}</span>
+    <span class="flecha">
+        ${secciones[cat] ? "⌄" : "›"}
+    </span>
+`;
+
+titulo.onclick = () => toggleSeccion(cat);
 
     lista.appendChild(titulo);
 
-    grupo.forEach(item => {
-      lista.appendChild(createItemElement(item));
+    if(secciones[cat]){
+
+    grupo.forEach(item=>{
+        lista.appendChild(createItemElement(item));
     });
+
+}
   });
 
   lucide.createIcons();

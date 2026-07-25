@@ -142,3 +142,35 @@
     height: 0;
     display: none;
 }
+
+.titulo-seccion{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:14px 8px;
+
+    margin-top:18px;
+
+    font-size:20px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    user-select:none;
+}
+
+.titulo-seccion .flecha{
+
+    font-size:22px;
+
+    color:#8E8E93;
+
+    transition:.2s;
+}
+
+.titulo-seccion:hover .flecha{
+
+    transform:scale(1.1);
+}

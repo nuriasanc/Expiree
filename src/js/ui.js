@@ -180,3 +180,11 @@ function addSwipe(wrapper, itemId) {
     currentX = 0;
   });
 }
+
+
+function toggleSeccion(cat){
+
+    secciones[cat] = !secciones[cat];
+
+    render();
+}
