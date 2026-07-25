@@ -218,15 +218,17 @@ window.render = function () {
   if (urgentes.length) {
 
     const titulo = document.createElement("h3");
-    titulo.innerText = "⚠️ Caducan pronto";
+    titulo.innerText = "Caducan pronto";
     titulo.style.color = "#ff3b30";
 
     lista.appendChild(titulo);
 
     urgentes.forEach(item => {
       const el = createItemElement(item);
-      el.querySelector(".alimento").style.borderLeft = "4px solid #ff3b30";
-      lista.appendChild(el);
+
+el.querySelector(".alimento").classList.add("urgente");
+
+lista.appendChild(el);
     });
   }
 
