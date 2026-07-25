@@ -355,14 +355,17 @@ function changeQty(n) {
    OPEN ITEM MODAL
 ========================= */
 
-function openOpenModal(id) {
-  openItemId = id;
-  document.getElementById("openModal").classList.remove("hidden");
+const modal = document.getElementById("modal");
+
+function abrirModal(){
+    modal.classList.remove("hidden");
 }
 
-function closeOpenModal() {
-  document.getElementById("openModal").classList.add("hidden");
+function cerrarModal(){
+    modal.classList.add("hidden");
 }
+
+
 
 async function confirmOpen() {
 
