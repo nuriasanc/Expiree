@@ -1,19 +1,22 @@
 .alimento{
-
     width:100%;
 
     background:#fff;
+
+    border:1px solid #e5e5ea;
 
     border-radius:18px;
 
     padding:18px;
 
-    margin-bottom:0px;
+    margin-bottom:0;
 
     box-sizing:border-box;
 
     box-shadow:0 4px 12px rgba(0,0,0,.08);
-    position: relative;
+
+    position:relative;
+
     transition:.2s;
 }
 
@@ -245,4 +248,35 @@
 
     opacity:0;
     transition:.2s;
+}
+
+.modal-anadir-alimentos input,
+.modal-anadir-alimentos select{
+
+    width:100%;
+    max-width:100%;
+
+    box-sizing:border-box;
+
+    height:56px;
+
+    padding:0 18px;
+
+    border-radius:16px;
+
+    border:1px solid #E5E5EA;
+
+    background:#F8F8F8;
+
+    font-size:17px;
+
+    outline:none;
+}
+input[type="date"]{
+
+    appearance:none;
+    -webkit-appearance:none;
+
+    min-width:0;
+    width:100%;
 }
