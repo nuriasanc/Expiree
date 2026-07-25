@@ -13,13 +13,14 @@ function addSwipe(wrapper, itemId) {
   const card = wrapper.querySelector(".alimento");
   const bg = wrapper.querySelector(".swipe-bg");
 
-  wrapper.addEventListener("touchstart", (e) => {
+  wrapper.addEventListener("touchstart", (e)=>{
+    e.stopPropagation();
 
     startX = e.touches[0].clientX;
     dragging = true;
 
     card.style.transition = "none";
-  });
+});
 
   wrapper.addEventListener("touchmove", (e) => {
 

@@ -89,15 +89,17 @@ function createItemElement(item) {
             <div class="acciones-alimento">
 
                 <span
-                    class="estado ${item.abierto ? "abierto" : "cerrado"}"
-                    onclick="event.stopPropagation();toggleEstado('${item.id}')">
-                    ${item.abierto ? "Abierto" : "Cerrado"}
-                </span>
+    class="estado ${item.abierto ? "abierto" : "cerrado"}"
+    onclick="event.stopPropagation(); toggleEstado('${item.id}')">
+    ${item.abierto ? "Abierto" : "Cerrado"}
+</span>
 
                 ${!esMovil() ? `
-                    <button class="btn-eliminar" onclick="event.stopPropagation();eliminarItem('${item.id}')">
-                        x
-                    </button>
+                    <button 
+    class="btn-eliminar" 
+    onclick="event.stopPropagation(); eliminarItem('${item.id}')">
+    x
+</button>
                 ` : ""}
 
             </div>
