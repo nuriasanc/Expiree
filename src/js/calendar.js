@@ -157,235 +157,28 @@ async function cargarSemana(){
 
 function mostrarPantalla(pantalla){
 
-    console.log("hola que tal")
+    document.getElementById("alimentosTab").classList.add("hidden");
+    document.getElementById("semanaTab").classList.add("hidden");
 
-    document.getElementById("alimentosTab")
-    .classList.add("hidden");
-
-
-    document.getElementById("semanaTab")
-    .classList.add("hidden");
-
-
+    document.getElementById("btnAlimentos").classList.remove("active");
+    document.getElementById("btnSemana").classList.remove("active");
 
     if(pantalla === "alimentos"){
 
-        document.getElementById("alimentosTab")
-        .classList.remove("hidden");
+        document.getElementById("alimentosTab").classList.remove("hidden");
+        document.getElementById("btnAlimentos").classList.add("active");
 
     }
-
 
     if(pantalla === "semana"){
 
-        document.getElementById("semanaTab")
-        .classList.remove("hidden");
+        document.getElementById("semanaTab").classList.remove("hidden");
+        document.getElementById("btnSemana").classList.add("active");
 
         cargarSemana();
-
     }
 
 }
-async function abrirComida(fecha, nombreDia){
-
-    const usados = await obtenerUsados();
-    diaSeleccionado = fecha;
-
-    alimentosSeleccionados=[];
-
-
-    document.getElementById("tituloDiaComida")
-    .innerText = nombreDia;
-
-
-    const lista =
-    document.getElementById("listaAlimentosComida");
-
-
-    lista.innerHTML="";
-
-    const grupos = {
-
-    1:{
-        nombre:"Nevera",
-        icono:""
-    },
-
-    2:{
-        nombre:"Congelador",
-        icono:""
-    },
-
-    3:{
-        nombre:"Despensa",
-        icono:""
-    }
-
-};
-
-
-
-[1,2,3].forEach(cat=>{
-
-
-const alimentos = items.filter(i=>{
-
-
-    if(i.contenedor_id !== cat)
-        return false;
-
-
-    const usado = usados[i.id] || 0;
-
-
-    const cantidadDisponible =
-        (i.cantidad || 1) - usado;
-
-
-    return cantidadDisponible > 0;
-
-
-});
-
-    if(!alimentos.length) return;
-
-
-
-    const grupo = document.createElement("div");
-
-    grupo.className="grupo-comida";
-
-
-
-    const titulo = document.createElement("div");
-
-    titulo.className="titulo-grupo";
-
-
-    titulo.innerHTML=`
-
-        <span>
-            ${grupos[cat].icono}
-            ${grupos[cat].nombre}
-        </span>
-
-        <span>
-            ${categoriasComida[cat] ? "⌄" : "›"}
-        </span>
-
-    `;
-
-
-
-    const listaGrupo=document.createElement("div");
-
-    listaGrupo.className="lista-grupo";
-
-
-
-    alimentos.forEach(item=>{
-
-
-        const div=document.createElement("div");
-
-        div.className="opcion-comida";
-
-
-        div.innerHTML=`
-
-            <span>
-
-${item.nombre}
-
-<small class="cantidad-disponible">
-
-(${(item.cantidad || 1) - (usados[item.id] || 0)} disponibles)
-
-</small>
-
-</span>
-
-            <input type="checkbox">
-
-        `;
-
-
-
-        const check=div.querySelector("input");
-
-
-
-        check.onchange=()=>{
-
-
-            if(check.checked){
-
-                alimentosSeleccionados.push(item.id);
-
-                div.classList.add("seleccionado");
-
-            }else{
-
-
-                alimentosSeleccionados =
-                alimentosSeleccionados.filter(
-                    id=>id!==item.id
-                );
-
-
-                div.classList.remove("seleccionado");
-
-            }
-
-        };
-
-
-        listaGrupo.appendChild(div);
-
-    });
-
-
-
-    titulo.onclick=()=>{
-
-
-        categoriasComida[cat] =
-        !categoriasComida[cat];
-
-
-        listaGrupo.style.display =
-        categoriasComida[cat]
-        ? "block"
-        : "none";
-
-
-        titulo.lastElementChild.innerText =
-        categoriasComida[cat]
-        ? "⌄"
-        : "›";
-
-
-    };
-
-
-
-    grupo.appendChild(titulo);
-
-    grupo.appendChild(listaGrupo);
-
-
-    lista.appendChild(grupo);
-
-
-});
-
-    document
-    .getElementById("modalComida")
-    .classList.remove("hidden");
-
-}
-
-
 
 function cerrarComida(){
 
@@ -399,30 +192,26 @@ function cerrarComida(){
 
 async function guardarComidaDia(){
 
+    await supabaseClient
+        .from("meal_plan")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("fecha", diaSeleccionado);
 
     for(const id of alimentosSeleccionados){
 
-
         await supabaseClient
-        .from("meal_plan")
-        .insert([{
-
-            user_id:user.id,
-
-            item_id:id,
-
-            fecha:diaSeleccionado,
-
-            tipo:"comida"
-
-        }]);
-
-
+            .from("meal_plan")
+            .insert([{
+                user_id: user.id,
+                item_id: id,
+                fecha: diaSeleccionado,
+                tipo: "comida"
+            }]);
     }
-
 
     cerrarComida();
 
-    cargarSemana();
-
+    await loadItems();
+    await cargarSemana();
 }

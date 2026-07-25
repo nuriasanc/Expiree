@@ -25,5 +25,6 @@ async function init() {
 }
 
 init();
+mostrarPantalla("alimentos");
 
 

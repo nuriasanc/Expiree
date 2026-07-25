@@ -35,6 +35,15 @@ window.saveItem = async function () {
   cerrarModal();
   loadItems();
 };
+function mismaFecha(fecha1, fecha2){
+
+    console.log("COMPARANDO:", fecha1, fecha2);
+
+    return new Date(fecha1).toISOString().slice(0,10) === 
+           new Date(fecha2).toISOString().slice(0,10);
+
+}
+
 
 /* =========================
    LOAD DATA
@@ -96,9 +105,9 @@ ${getPrimerDiaComida(item.id)
         ${getPrimerDiaComida(item.id)}
     </span>
 
-   <span
+<span
  class="estado ${item.abierto ? "abierto" : "cerrado"}"
- onclick="toggleEstado('${item.id}')">
+ onclick="event.stopPropagation(); toggleEstado('${item.id}')">
  ${item.abierto ? "Abierto" : "Cerrado"}
 </span>
     `
@@ -199,8 +208,10 @@ function cambiarCantidad(valor) {
 /* =========================
    MEAL MODAL
 ========================= */
-function openMealModal(date) {
-  selectedDate = normalizarFecha(date);
+async function openMealModal(date) {
+
+    selectedDate = date;
+
     const modal = document.getElementById("mealModal");
     const list = document.getElementById("foodList");
 
@@ -209,58 +220,34 @@ function openMealModal(date) {
     list.innerHTML = "";
 
 
-    const sorted = [...items]
-        .sort((a,b)=> a.contenedor_id - b.contenedor_id);
+    const { data: mealsData } = await supabaseClient
+        .from("meal_plan")
+        .select(`
+            *,
+            items(*)
+        `)
+        .eq("user_id", user.id);
 
 
-    sorted.forEach(item=>{
+    meals = mealsData || [];
 
-const seleccionado = meals.some(m =>
-    m.item_id == item.id &&
-    new Date(m.fecha).toISOString().split("T")[0] === selectedDate
-);
+
+    items.forEach(item => {
+
+
+        const comida = meals.find(m =>
+            m.item_id == item.id &&
+            mismaFecha(m.fecha, selectedDate)
+        );
+            console.log("hola")
+
+
+        const seleccionado = !!comida;
+
 
         const el = document.createElement("div");
 
         el.className = "food-option";
-
-
-        el.innerHTML = `
-
-            <div>
-                <b>${item.nombre}</b>
-
-                <small>
-                    ${getCatName(item.contenedor_id)}
-                </small>
-            </div>
-
-
-            <span class="check">
-                ${seleccionado ? "✓" : ""}
-            </span>
-
-        `;
-
-
-
-       el.onclick = ()=>{
-const estaSeleccionado = meals.some(m =>
-    m.item_id === item.id &&
-    normalizarFecha(m.fecha) === selectedDate
-);
-
-    if(estaSeleccionado){
-
-        quitarComida(item.id);
-
-    }else{
-
-        selectMeal(item.id);
-
-    }
-
-};
 
 
         if(seleccionado){
@@ -268,67 +255,59 @@ const estaSeleccionado = meals.some(m =>
         }
 
 
+        el.innerHTML = `
+            <div>
+                <b>${item.nombre}</b>
+                <small>${getCatName(item.contenedor_id)}</small>
+            </div>
+
+            <span class="check">
+                ${seleccionado ? "✓" : ""}
+            </span>
+        `;
+
+
+        el.onclick = async ()=>{
+
+
+            if(comida){
+
+                await supabaseClient
+                .from("meal_plan")
+                .delete()
+                .eq("id", comida.id);
+
+
+            }else{
+
+
+                await supabaseClient
+                .from("meal_plan")
+                .insert([{
+                    user_id:user.id,
+                    item_id:item.id,
+                    fecha:selectedDate,
+                    tipo:document.getElementById("mealType").value
+                }]);
+
+            }
+
+
+            await loadItems();
+
+            openMealModal(selectedDate);
+
+        };
+
+
         list.appendChild(el);
 
     });
 
 }
-async function quitarComida(itemId){
-
-    const comida = meals.find(m =>
-        m.item_id === itemId &&
-        normalizarFecha(m.fecha) === selectedDate
-    );
 
 
-    if(!comida){
-        console.log("No encontrada");
-        return;
-    }
 
-
-    const {error} = await supabaseClient
-        .from("meal_plan")
-        .delete()
-        .eq("id", comida.id);
-
-
-    if(error){
-        console.error(error);
-        return;
-    }
-
-
-    await loadItems();
-
-    openMealModal(selectedDate);
-}
-async function selectMeal(itemId) {
-const existe = meals.some(m =>
-    m.item_id == itemId &&
-    new Date(m.fecha).toISOString().split("T")[0] === selectedDate
-);
-
-    if(existe) return;
-
-
-    const tipo = document.getElementById("mealType").value;
-
-
-    await supabaseClient
-    .from("meal_plan")
-    .insert([{
-        user_id:user.id,
-        item_id:itemId,
-        fecha:selectedDate,
-        tipo:tipo
-    }]);
-
-
-    await loadItems();
-
-    openMealModal(selectedDate);
-}
 function closeMealModal() {
   document.getElementById("mealModal").classList.add("hidden");
 }
@@ -430,6 +409,145 @@ async function confirmOpen() {
 /* =========================
    TABS
 ========================= */
+
+async function abrirComida(fecha, nombreDia){
+
+    const usados = await obtenerUsados();
+
+    diaSeleccionado = fecha;
+    alimentosSeleccionados = [];
+
+    // Cargar comidas ya guardadas para este día
+    const { data: comidasDia } = await supabaseClient
+        .from("meal_plan")
+        .select("item_id")
+        .eq("user_id", user.id)
+        .eq("fecha", fecha);
+
+    const seleccionados = comidasDia
+        ? comidasDia.map(c => c.item_id)
+        : [];
+
+    alimentosSeleccionados = [...seleccionados];
+
+    document.getElementById("tituloDiaComida").innerText = nombreDia;
+
+    const lista = document.getElementById("listaAlimentosComida");
+    lista.innerHTML = "";
+
+    const grupos = {
+        1:{nombre:"Nevera",icono:""},
+        2:{nombre:"Congelador",icono:""},
+        3:{nombre:"Despensa",icono:""}
+    };
+
+    [1,2,3].forEach(cat=>{
+
+        const alimentos = items.filter(i=>{
+
+            if(i.contenedor_id !== cat) return false;
+
+            // Si ya está seleccionado ese día SIEMPRE se muestra
+            if(seleccionados.includes(i.id)) return true;
+
+            const usado = usados[i.id] || 0;
+            const disponibles = (i.cantidad || 1) - usado;
+
+            return disponibles > 0;
+        });
+
+        if(!alimentos.length) return;
+
+        const grupo = document.createElement("div");
+        grupo.className="grupo-comida";
+
+        const titulo = document.createElement("div");
+        titulo.className="titulo-grupo";
+
+        titulo.innerHTML=`
+            <span>${grupos[cat].nombre}</span>
+            <span>${categoriasComida[cat] ? "⌄" : "›"}</span>
+        `;
+
+        const listaGrupo=document.createElement("div");
+        listaGrupo.className="lista-grupo";
+
+        if(!categoriasComida[cat]){
+            listaGrupo.style.display="none";
+        }
+
+        alimentos.forEach(item=>{
+
+            const usado = usados[item.id] || 0;
+            const disponibles = (item.cantidad || 1) - usado;
+
+            const div=document.createElement("div");
+            div.className="opcion-comida";
+
+            div.innerHTML=`
+                <span>
+                    ${item.nombre}
+                    <small class="cantidad-disponible">
+                        (${Math.max(disponibles,0)} disponibles)
+                    </small>
+                </span>
+
+                <input type="checkbox">
+            `;
+
+            const check = div.querySelector("input");
+
+            // Marcar los ya guardados
+            if(seleccionados.includes(item.id)){
+                check.checked = true;
+                div.classList.add("seleccionado");
+            }
+
+            check.onchange=()=>{
+
+                if(check.checked){
+
+                    if(!alimentosSeleccionados.includes(item.id)){
+                        alimentosSeleccionados.push(item.id);
+                    }
+
+                    div.classList.add("seleccionado");
+
+                }else{
+
+                    alimentosSeleccionados =
+                        alimentosSeleccionados.filter(id=>id!==item.id);
+
+                    div.classList.remove("seleccionado");
+                }
+
+            };
+
+            listaGrupo.appendChild(div);
+
+        });
+
+        titulo.onclick=()=>{
+
+            categoriasComida[cat]=!categoriasComida[cat];
+
+            listaGrupo.style.display =
+                categoriasComida[cat] ? "block" : "none";
+
+            titulo.lastElementChild.innerText =
+                categoriasComida[cat] ? "⌄" : "›";
+
+        };
+
+        grupo.appendChild(titulo);
+        grupo.appendChild(listaGrupo);
+
+        lista.appendChild(grupo);
+
+    });
+
+    document.getElementById("modalComida").classList.remove("hidden");
+}
 
 function showTab(tabId) {
 
