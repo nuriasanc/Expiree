@@ -280,3 +280,311 @@ input[type="date"]{
     min-width:0;
     width:100%;
 }
+
+.semana-container{
+
+    padding:18px;
+
+}
+
+
+.dia-semana{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:18px;
+
+    margin-bottom:14px;
+
+    box-shadow:
+    0 4px 12px rgba(0,0,0,.08);
+
+}
+
+
+.dia-info{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+
+.dia-info h3{
+
+    margin:0;
+
+    font-size:20px;
+
+}
+
+
+.dia-info span{
+
+    color:#777;
+
+}
+
+
+.comidas-dia{
+
+    margin-top:15px;
+
+    color:#999;
+
+    font-size:15px;
+
+}
+
+.semana-container{
+
+    padding:18px;
+
+}
+
+
+.dia-semana{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:18px;
+
+    margin-bottom:14px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+
+    cursor:pointer;
+
+}
+
+
+.dia-info{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+
+.dia-info h3{
+
+    margin:0;
+
+    font-size:20px;
+
+}
+
+
+.dia-info span{
+
+    color:#8E8E93;
+
+}
+
+
+.comidas-dia{
+
+    margin-top:14px;
+
+    color:#666;
+
+}
+
+
+
+.lista-comida{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+
+.opcion-comida{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:15px;
+
+    border-radius:15px;
+
+    background:#f8f8f8;
+
+    transition:.2s;
+
+}
+
+
+.opcion-comida.seleccionado{
+
+    background:#E8F5E9;
+
+}
+.cantidad-disponible{
+
+    color:#8E8E93;
+
+    font-size:13px;
+
+    margin-left:6px;
+
+}
+
+
+.opcion-comida input{
+
+    width:22px;
+    height:22px;
+
+}
+
+.grupo-comida{
+
+    margin-bottom:18px;
+
+}
+
+
+.titulo-grupo{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:14px;
+
+    background:#f2f2f7;
+
+    border-radius:14px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    font-size:17px;
+
+}
+
+
+
+.lista-grupo{
+
+    margin-top:8px;
+
+}
+
+
+.opcion-comida{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    background:white;
+
+    padding:14px;
+
+    border-radius:14px;
+
+    margin-bottom:8px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.06);
+
+}
+
+
+.opcion-comida.seleccionado{
+
+    background:#E8F5E9;
+
+}
+
+
+.opcion-comida input{
+
+    width:22px;
+
+    height:22px;
+
+}
+.badge-comida{
+
+    background:#007aff;
+
+    color:white;
+
+    padding:5px 12px;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    white-space:nowrap;
+}
+
+.food-option{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:15px;
+
+    background:white;
+
+    border-radius:14px;
+
+    margin-bottom:10px;
+
+    cursor:pointer;
+
+}
+
+
+.food-option.seleccionado{
+
+    background:#E8F5E9;
+
+}
+
+
+.check{
+
+    width:26px;
+    height:26px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#34C759;
+
+    color:white;
+
+    font-weight:bold;
+}

@@ -88,11 +88,23 @@ function createItemElement(item) {
 
             <div class="acciones-alimento">
 
-                <span
-    class="estado ${item.abierto ? "abierto" : "cerrado"}"
-    onclick="event.stopPropagation(); toggleEstado('${item.id}')">
-    ${item.abierto ? "Abierto" : "Cerrado"}
+
+${getPrimerDiaComida(item.id)
+      ?
+      `
+    <span class="badge-comida">
+        ${getPrimerDiaComida(item.id)}
+    </span>
+
+   <span
+ class="estado ${item.abierto ? "abierto" : "cerrado"}"
+ onclick="toggleEstado('${item.id}')">
+ ${item.abierto ? "Abierto" : "Cerrado"}
 </span>
+    `
+      :
+      ""
+    }
 
                 ${!esMovil() ? `
                     <button 
@@ -187,36 +199,94 @@ function cambiarCantidad(valor) {
 /* =========================
    MEAL MODAL
 ========================= */
-
 function openMealModal(date) {
 
-  selectedDate = date;
+    selectedDate = date;
 
-  const modal = document.getElementById("mealModal");
-  const list = document.getElementById("foodList");
+    const modal = document.getElementById("mealModal");
+    const list = document.getElementById("foodList");
 
-  modal.classList.remove("hidden");
+    modal.classList.remove("hidden");
 
-  const sorted = [...items].sort((a, b) => diasRestantes(a) - diasRestantes(b));
+    list.innerHTML = "";
 
-  list.innerHTML = "";
 
-  sorted.forEach(item => {
+    const sorted = [...items]
+        .sort((a,b)=> a.contenedor_id - b.contenedor_id);
 
-    const el = document.createElement("div");
-    el.className = "food-option";
 
-    el.innerHTML = `
-      <b>${item.nombre}</b>
-      <small>${diasRestantes(item)} días</small>
-    `;
+    sorted.forEach(item=>{
 
-    el.onclick = () => selectMeal(item.id);
 
-    list.appendChild(el);
-  });
+        const seleccionado = meals.some(m =>
+            m.item_id === item.id &&
+            m.fecha === selectedDate
+        );
+
+
+        const el = document.createElement("div");
+
+        el.className = "food-option";
+
+
+        el.innerHTML = `
+
+            <div>
+                <b>${item.nombre}</b>
+
+                <small>
+                    ${getCatName(item.contenedor_id)}
+                </small>
+            </div>
+
+
+            <span class="check">
+                ${seleccionado ? "✓" : ""}
+            </span>
+
+        `;
+
+
+
+        el.onclick = ()=>{
+
+            if(seleccionado){
+
+                quitarComida(item.id);
+
+            }else{
+
+                selectMeal(item.id);
+
+            }
+
+        };
+
+
+        if(seleccionado){
+            el.classList.add("seleccionado");
+        }
+
+
+        list.appendChild(el);
+
+    });
+
 }
+async function quitarComida(itemId){
 
+    await supabaseClient
+    .from("meal_plan")
+    .delete()
+    .eq("item_id", itemId)
+    .eq("fecha", selectedDate);
+
+
+    loadItems();
+
+    openMealModal(selectedDate);
+
+}
 async function selectMeal(itemId) {
 
   const tipo = document.getElementById("mealType").value;
@@ -229,9 +299,9 @@ async function selectMeal(itemId) {
       fecha: selectedDate,
       tipo: tipo
     }]);
+loadItems();
 
-  closeMealModal();
-  loadItems();
+openMealModal(selectedDate);
 }
 
 function closeMealModal() {
@@ -469,5 +539,25 @@ async function guardarEditar() {
   cerrarEditar();
 
   loadItems();
+
+}
+
+function getPrimerDiaComida(itemId) {
+
+  const comidas = meals
+    .filter(m => m.item_id === itemId)
+    .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
+
+  if (!comidas.length) return null;
+
+
+  const fecha = new Date(comidas[0].fecha);
+
+
+  return fecha.toLocaleDateString("es-ES", {
+    weekday: "long"
+  })
+    .replace(/^./, letra => letra.toUpperCase());
 
 }

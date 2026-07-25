@@ -15,6 +15,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+
 </head>
 
 <body>
@@ -86,7 +87,7 @@
                     <input type="text" placeholder="Alimento" id="nombre">
 
                     <div class="botonera">
-                        <button class="frigo cat" id="cat1" onclick="setCat(1)"> Frigorífico</button>
+                        <button class="frigo cat" id="cat1" onclick="setCat(1)"> Nevera</button>
                         <button class="conge cat" id="cat2" onclick="setCat(2)">Congelador</button>
                         <button class="despe cat" id="cat3" onclick="setCat(3)">Despensa</button>
                     </div>
@@ -160,31 +161,78 @@
     </div>
 
 </div>
-
-        <!-- PANTALLA -->
-        <div class="pantalla">
-
-            <div class="pantalla-alimentos">
-
-                <div id="lista">
+<!-- PANTALLAS -->
+<div class="pantalla">
 
 
-                </div>
+    <div id="alimentosTab">
 
-                <button class="button-anadir-alimento" onclick="abrirModal()">
-                    +
-                </button>
+        <div class="pantalla-alimentos">
 
-            </div>
+            <div id="lista"></div>
 
-            <!-- AQUÍ VA TU SEGUNDA PANTALLA -->
+            <button class="button-anadir-alimento" onclick="abrirModal()">
+                +
+            </button>
 
         </div>
 
+    </div>
+
+
+    <div id="semanaTab" class="hidden">
+
+        <div class="semana-container" id="semanaLista"></div>
+
+    </div>
+
+    <div class="modal hidden" id="modalComida">
+
+    <div class="modal-anadir-alimentos comida-modal">
+
+        <div class="cabecera-modal">
+
+            <h3 id="tituloDiaComida">
+                Añadir comidas
+            </h3>
+
+            <button onclick="cerrarComida()">
+                ✕
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <div id="listaAlimentosComida" class="lista-comida">
+
+            </div>
+
+
+            <button class="addBtn" onclick="guardarComidaDia()">
+                Guardar
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
         <nav class="nav-footer">
-            <span>Alimentos</span>
-            <span>Semana</span>
-        </nav>
+
+    <span onclick="mostrarPantalla('alimentos')">
+        Alimentos
+    </span>
+
+    <span onclick="mostrarPantalla('semana')">
+        Semana
+    </span>
+
+</nav>
 
     </div>
 
