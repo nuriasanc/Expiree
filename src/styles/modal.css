@@ -242,3 +242,66 @@
     background:#cfcfcf;
     border-radius:20px;
 }
+
+/* ===========================
+   SELECTOR DE CANTIDAD
+=========================== */
+
+.cantidad-selector{
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    height:56px;
+
+    border:1px solid #E5E5EA;
+    border-radius:16px;
+
+    background:#F8F8F8;
+
+    overflow:hidden;
+}
+
+.cantidad-selector button{
+
+    width:56px;
+    height:56px;
+
+    border:none;
+
+    background:transparent;
+
+    font-size:30px;
+    font-weight:300;
+
+    cursor:pointer;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    transition:.2s;
+}
+
+.cantidad-selector button:hover{
+
+    background:#E9E9EE;
+}
+
+.cantidad-selector button:active{
+
+    background:#DCDCE1;
+}
+
+.cantidad-selector span{
+
+    flex:1;
+
+    text-align:center;
+
+    font-size:18px;
+    font-weight:600;
+
+    color:#111;
+}

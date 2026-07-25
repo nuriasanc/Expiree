@@ -61,7 +61,7 @@ right:20px;
     border: none;
     border-radius: 50%;
 
-    background: #AABDFF;
+    background: #007AFF;
     color: white;
 
     display: flex;
@@ -191,7 +191,7 @@ header{
 }
 
 .botonera button.selected{
-    background: #AABDFF;
+    background: #007AFF;
     color: white;
     box-shadow: 0 6px 18px rgba(0,122,255,.25);
 }

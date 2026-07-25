@@ -122,7 +122,7 @@ function addSwipe(wrapper, itemId) {
 
     if (currentX < 0) {
       card.style.transform = `translateX(${currentX}px)`;
-      bg.style.background = "#E98688";
+      bg.style.background = "#ff3b30";
       bg.innerText = "Eliminar";
       bg.style.opacity = Math.min(Math.abs(currentX) / 120, 1);
     }
@@ -135,7 +135,7 @@ function addSwipe(wrapper, itemId) {
         bg.style.background = "#ff9500";
       } else {
         bg.innerText = "Abrir";
-        bg.style.background = "#CCEDCE";
+        bg.style.background = "#34c759";
       }
 
       bg.style.opacity = Math.min(currentX / 120, 1);
