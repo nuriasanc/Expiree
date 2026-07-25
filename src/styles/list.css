@@ -127,7 +127,7 @@
     color:#ff3b30;
 }
 
-#lista{
+#lista, #semanaTab{
 
     height: calc(100vh - 130px);
 
@@ -588,3 +588,4 @@ input[type="date"]{
 
     font-weight:bold;
 }
+

@@ -57,7 +57,7 @@ window.loadItems = async function () {
 
   items = itemsData || [];
   meals = mealsData || [];
-
+console.log("COMIDAS:", meals);
   render();
 }
 
@@ -200,9 +200,7 @@ function cambiarCantidad(valor) {
    MEAL MODAL
 ========================= */
 function openMealModal(date) {
-
-    selectedDate = date;
-
+  selectedDate = normalizarFecha(date);
     const modal = document.getElementById("mealModal");
     const list = document.getElementById("foodList");
 
@@ -217,12 +215,10 @@ function openMealModal(date) {
 
     sorted.forEach(item=>{
 
-
-        const seleccionado = meals.some(m =>
-            m.item_id === item.id &&
-            m.fecha === selectedDate
-        );
-
+const seleccionado = meals.some(m =>
+    m.item_id == item.id &&
+    new Date(m.fecha).toISOString().split("T")[0] === selectedDate
+);
 
         const el = document.createElement("div");
 
@@ -248,19 +244,23 @@ function openMealModal(date) {
 
 
 
-        el.onclick = ()=>{
+       el.onclick = ()=>{
+const estaSeleccionado = meals.some(m =>
+    m.item_id === item.id &&
+    normalizarFecha(m.fecha) === selectedDate
+);
 
-            if(seleccionado){
+    if(estaSeleccionado){
 
-                quitarComida(item.id);
+        quitarComida(item.id);
 
-            }else{
+    }else{
 
-                selectMeal(item.id);
+        selectMeal(item.id);
 
-            }
+    }
 
-        };
+};
 
 
         if(seleccionado){
@@ -275,35 +275,60 @@ function openMealModal(date) {
 }
 async function quitarComida(itemId){
 
-    await supabaseClient
-    .from("meal_plan")
-    .delete()
-    .eq("item_id", itemId)
-    .eq("fecha", selectedDate);
+    const comida = meals.find(m =>
+        m.item_id === itemId &&
+        normalizarFecha(m.fecha) === selectedDate
+    );
 
 
-    loadItems();
+    if(!comida){
+        console.log("No encontrada");
+        return;
+    }
+
+
+    const {error} = await supabaseClient
+        .from("meal_plan")
+        .delete()
+        .eq("id", comida.id);
+
+
+    if(error){
+        console.error(error);
+        return;
+    }
+
+
+    await loadItems();
 
     openMealModal(selectedDate);
-
 }
 async function selectMeal(itemId) {
+const existe = meals.some(m =>
+    m.item_id == itemId &&
+    new Date(m.fecha).toISOString().split("T")[0] === selectedDate
+);
 
-  const tipo = document.getElementById("mealType").value;
+    if(existe) return;
 
-  await supabaseClient
+
+    const tipo = document.getElementById("mealType").value;
+
+
+    await supabaseClient
     .from("meal_plan")
     .insert([{
-      user_id: user.id,
-      item_id: itemId,
-      fecha: selectedDate,
-      tipo: tipo
+        user_id:user.id,
+        item_id:itemId,
+        fecha:selectedDate,
+        tipo:tipo
     }]);
-loadItems();
 
-openMealModal(selectedDate);
+
+    await loadItems();
+
+    openMealModal(selectedDate);
 }
-
 function closeMealModal() {
   document.getElementById("mealModal").classList.add("hidden");
 }

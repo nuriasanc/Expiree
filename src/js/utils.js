@@ -9,4 +9,7 @@ function diasRestantes(item) {
 
   return Math.ceil((new Date(item.fecha_caducidad) - new Date()) / 86400000);
 }
+function normalizarFecha(fecha){
+    return new Date(fecha).toLocaleDateString("en-CA");
+}
 
