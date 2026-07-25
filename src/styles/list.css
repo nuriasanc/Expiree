@@ -8,7 +8,7 @@
 
     padding:18px;
 
-    margin-bottom:14px;
+    margin-bottom:0px;
 
     box-sizing:border-box;
 
@@ -218,13 +218,21 @@
 }
 
 .swipe-wrapper{
+
     position:relative;
     overflow:hidden;
+
+    margin-bottom:14px;
+
+    border-radius:18px;
 }
 
 .swipe-bg{
+
     position:absolute;
     inset:0;
+
+    border-radius:inherit;
 
     display:flex;
     align-items:center;
@@ -232,11 +240,9 @@
 
     padding-right:24px;
 
-    color:white;
-    font-weight:700;
+    background:#ff3b30;
+    color:#fff;
 
     opacity:0;
     transition:.2s;
-
-    border-radius:18px;
 }
