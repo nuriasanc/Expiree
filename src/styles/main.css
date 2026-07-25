@@ -30,3 +30,41 @@ html, body {
 .hidden{
     display:none !important;
 }
+
+
+.button-anadir-alimento{
+
+    position: fixed;
+
+    right: 30px;
+    bottom: 80px;
+
+    width: 60px;
+    height: 60px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #007AFF;
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 32px;
+    font-weight: 300;
+
+    cursor: pointer;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,.2);
+
+    transition: .2s;
+
+    z-index: 1000;
+}
+
+
+.button-anadir-alimento:active{
+    transform: scale(.95);
+}
