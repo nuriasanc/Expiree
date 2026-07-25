@@ -110,6 +110,50 @@
 
         </div>
 
+        <div class="modal hidden" id="modalEditar">
+
+    <div class="modal-anadir-alimentos">
+
+        <div class="cabecera-modal">
+            <h3>Editar alimento</h3>
+
+            <button onclick="cerrarEditar()">✕</button>
+        </div>
+
+
+        <div class="modal-body">
+
+            <input id="editarNombre" type="text" placeholder="Alimento">
+
+
+            <input id="editarFecha" type="date">
+
+
+            <div class="cantidad-selector">
+
+                <button type="button" onclick="cambiarCantidadEditar(-1)">
+                    −
+                </button>
+
+                <span id="editarCantidad">1</span>
+
+                <button type="button" onclick="cambiarCantidadEditar(1)">
+                    +
+                </button>
+
+            </div>
+
+
+            <button class="addBtn" onclick="guardarEditar()">
+                Editar
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
         <!-- PANTALLA -->
         <div class="pantalla">
 

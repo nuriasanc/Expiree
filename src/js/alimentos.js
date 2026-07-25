@@ -1,7 +1,7 @@
 let secciones = {
-    1: true,
-    2: true,
-    3: true
+  1: true,
+  2: true,
+  3: true
 };
 function setCat(id) {
 
@@ -26,7 +26,7 @@ window.saveItem = async function () {
     .insert([{
       user_id: user.id,
       nombre: nombre.value.trim(),
-      cantidad:cantidad,
+      cantidad: cantidad,
       fecha_caducidad: fecha.value || null,
       contenedor_id: selectedCat,
       abierto: false
@@ -40,7 +40,7 @@ window.saveItem = async function () {
    LOAD DATA
 ========================= */
 
-window.loadItems =  async function ()  {
+window.loadItems = async function () {
 
   const { data: itemsData } = await supabaseClient
     .from("items")
@@ -68,21 +68,21 @@ window.loadItems =  async function ()  {
 
 function createItemElement(item) {
 
-    const wrapper = document.createElement("div");
-    wrapper.className = "swipe-wrapper";
+  const wrapper = document.createElement("div");
+  wrapper.className = "swipe-wrapper";
 
-    const bg = document.createElement("div");
-    bg.className = "swipe-bg";
+  const bg = document.createElement("div");
+  bg.className = "swipe-bg";
 
-    const card = document.createElement("div");
-    card.className = "alimento";
+  const card = document.createElement("div");
+  card.className = "alimento";
+  card.onclick = () => abrirEditar(item.id);
 
-    const dias = item.fecha_caducidad
-        ? diasRestantes(item)
-        : "-";
+  const dias = item.fecha_caducidad
+    ? diasRestantes(item)
+    : "-";
 
-        console.log("hola qu etal");
-    card.innerHTML = `
+  card.innerHTML = `
         <div class="alimento-titulo">
             <h3>${item.nombre}</h3>
 
@@ -90,12 +90,12 @@ function createItemElement(item) {
 
                 <span
                     class="estado ${item.abierto ? "abierto" : "cerrado"}"
-                    onclick="toggleEstado('${item.id}')">
+                    onclick="event.stopPropagation();toggleEstado('${item.id}')">
                     ${item.abierto ? "Abierto" : "Cerrado"}
                 </span>
 
                 ${!esMovil() ? `
-                    <button class="btn-eliminar" onclick="eliminarItem('${item.id}')">
+                    <button class="btn-eliminar" onclick="event.stopPropagation();eliminarItem('${item.id}')">
                         x
                     </button>
                 ` : ""}
@@ -129,14 +129,14 @@ function createItemElement(item) {
         </div>
     `;
 
-    wrapper.appendChild(bg);
-    wrapper.appendChild(card);
+  wrapper.appendChild(bg);
+  wrapper.appendChild(card);
 
-    if (esMovil()) {
-        addSwipe(wrapper, item.id);
-    }
+  if (esMovil()) {
+    addSwipe(wrapper, item.id);
+  }
 
-    return wrapper;
+  return wrapper;
 }
 function getCatName(id) {
   if (id === 1) return "Nevera";
@@ -169,15 +169,15 @@ async function closeItem(id) {
 
 let cantidad = 1;
 
-function cambiarCantidad(valor){
+function cambiarCantidad(valor) {
 
-    cantidad += valor;
+  cantidad += valor;
 
-    if(cantidad < 1){
-        cantidad = 1;
-    }
+  if (cantidad < 1) {
+    cantidad = 1;
+  }
 
-    document.getElementById("cantidad").textContent = cantidad;
+  document.getElementById("cantidad").textContent = cantidad;
 
 }
 
@@ -262,9 +262,9 @@ window.render = function () {
     urgentes.forEach(item => {
       const el = createItemElement(item);
 
-el.querySelector(".alimento").classList.add("urgente");
+      el.querySelector(".alimento").classList.add("urgente");
 
-lista.appendChild(el);
+      lista.appendChild(el);
     });
   }
 
@@ -277,30 +277,30 @@ lista.appendChild(el);
 
     if (!grupo.length) return;
 
-   const titulo = document.createElement("div");
-titulo.className = "titulo-seccion";
+    const titulo = document.createElement("div");
+    titulo.className = "titulo-seccion";
 
-const nombre =
-    cat === 1 ? "Nevera" :
-    cat === 2 ? "Congelador" :
-    "Despensa";
+    const nombre =
+      cat === 1 ? "Nevera" :
+        cat === 2 ? "Congelador" :
+          "Despensa";
 
-titulo.innerHTML = `
+    titulo.innerHTML = `
     <span>${nombre}</span>
     <i data-lucide="${secciones[cat] ? "chevron-down" : "chevron-right"}" class="flecha"></i>
 `;
 
-titulo.onclick = () => toggleSeccion(cat);
+    titulo.onclick = () => toggleSeccion(cat);
 
     lista.appendChild(titulo);
 
-    if(secciones[cat]){
+    if (secciones[cat]) {
 
-    grupo.forEach(item=>{
+      grupo.forEach(item => {
         lista.appendChild(createItemElement(item));
-    });
+      });
 
-}
+    }
   });
 
   lucide.createIcons();
@@ -350,26 +350,122 @@ function showTab(tabId) {
 }
 async function toggleEstado(id) {
 
-    const item = items.find(i => i.id === id);
+  const item = items.find(i => i.id === id);
 
-    if (!item) return;
+  if (!item) return;
 
-    const { error } = await supabaseClient
-        .from("items")
-        .update({
-            abierto: !item.abierto
-        })
-        .eq("id", id);
+  const { error } = await supabaseClient
+    .from("items")
+    .update({
+      abierto: !item.abierto
+    })
+    .eq("id", id);
 
-    if (error) {
-        console.error(error);
-        return;
-    }
+  if (error) {
+    console.error(error);
+    return;
+  }
 
-    loadItems();
+  loadItems();
 }
 
 async function eliminarItem(id) {
-    await deleteItem(id);
-    loadItems();
+  await deleteItem(id);
+  loadItems();
+}
+
+let itemEditando = null;
+let cantidadEditar = 1;
+
+
+function abrirEditar(id) {
+
+  const item = items.find(i => i.id === id);
+
+  if (!item) return;
+
+
+  itemEditando = id;
+
+  cantidadEditar = item.cantidad || 1;
+
+
+  document.getElementById("editarNombre").value = item.nombre;
+
+  document.getElementById("editarFecha").value =
+    item.fecha_caducidad || "";
+
+
+  document.getElementById("editarCantidad").textContent =
+    cantidadEditar;
+
+
+  document
+    .getElementById("modalEditar")
+    .classList.remove("hidden");
+}
+
+
+
+function cambiarCantidadEditar(valor) {
+
+  cantidadEditar += valor;
+
+
+  if (cantidadEditar < 1) {
+    cantidadEditar = 1;
+  }
+
+
+  document.getElementById("editarCantidad").textContent =
+    cantidadEditar;
+}
+
+
+
+function cerrarEditar() {
+
+  document
+    .getElementById("modalEditar")
+    .classList.add("hidden");
+
+}
+
+
+
+async function guardarEditar() {
+
+
+  const nombreNuevo =
+    document.getElementById("editarNombre").value.trim();
+
+
+  const fechaNueva =
+    document.getElementById("editarFecha").value;
+
+
+
+  if (!nombreNuevo) return;
+
+
+
+  await supabaseClient
+    .from("items")
+    .update({
+
+      nombre: nombreNuevo,
+
+      cantidad: cantidadEditar,
+
+      fecha_caducidad: fechaNueva || null
+
+    })
+    .eq("id", itemEditando);
+
+
+
+  cerrarEditar();
+
+  loadItems();
+
 }

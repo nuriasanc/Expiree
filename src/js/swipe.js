@@ -1,66 +1,72 @@
 function esMovil() {
-    return window.matchMedia("(max-width: 768px)").matches;
+  return window.matchMedia("(max-width: 768px)").matches;
 }
 function addSwipe(wrapper, itemId) {
 
-    if (!esMovil()) return;
+  if (!esMovil()) return;
 
-    let startX = 0;
-    let currentX = 0;
-    let dragging = false;
+  let moved = false;
+  let startX = 0;
+  let currentX = 0;
+  let dragging = false;
 
-    const card = wrapper.querySelector(".alimento");
-    const bg = wrapper.querySelector(".swipe-bg");
+  const card = wrapper.querySelector(".alimento");
+  const bg = wrapper.querySelector(".swipe-bg");
 
-    wrapper.addEventListener("touchstart", (e) => {
+  wrapper.addEventListener("touchstart", (e) => {
 
-        startX = e.touches[0].clientX;
-        dragging = true;
+    startX = e.touches[0].clientX;
+    dragging = true;
 
-        card.style.transition = "none";
-    });
+    card.style.transition = "none";
+  });
 
-    wrapper.addEventListener("touchmove", (e) => {
+  wrapper.addEventListener("touchmove", (e) => {
 
-        if (!dragging) return;
+    if (!dragging) return;
+    moved = true;
 
-        currentX = e.touches[0].clientX - startX;
+    currentX = e.touches[0].clientX - startX;
 
-        // Solo permitir deslizar hacia la izquierda
-        if (currentX > 0) return;
+    // Solo permitir deslizar hacia la izquierda
+    if (currentX > 0) return;
 
-        card.style.transform = `translateX(${currentX}px)`;
+    card.style.transform = `translateX(${currentX}px)`;
 
-        bg.style.background = "#ff3b30";
-        bg.style.opacity = Math.min(Math.abs(currentX) / 120, 1);
-        bg.innerHTML = "Eliminar";
-    });
+    bg.style.background = "#ff3b30";
+    bg.style.opacity = Math.min(Math.abs(currentX) / 120, 1);
+    bg.innerHTML = "Eliminar";
+  });
 
-    wrapper.addEventListener("touchend", async () => {
+  wrapper.addEventListener("touchend", async () => {
 
-        dragging = false;
+    if (!moved) {
+      abrirEditar(itemId);
+    }
+    dragging = false;
 
-        card.style.transition = "transform .2s ease";
+    card.style.transition = "transform .2s ease";
 
-        // Si ha deslizado suficiente, eliminar
-        if (currentX < -120) {
+    // Si ha deslizado suficiente, eliminar
+    if (currentX < -120) {
 
-            card.style.transform = "translateX(-120%)";
+      card.style.transform = "translateX(-120%)";
 
-            setTimeout(async () => {
+      setTimeout(async () => {
 
-                await deleteItem(itemId);
-                loadItems();
+        await deleteItem(itemId);
+        loadItems();
 
-            }, 200);
+      }, 200);
 
-            return;
-        }
+      return;
+    }
 
-        // Volver a la posición original
-        card.style.transform = "translateX(0)";
-        bg.style.opacity = "0";
+    // Volver a la posición original
+    card.style.transform = "translateX(0)";
+    bg.style.opacity = "0";
 
-        currentX = 0;
-    });
+    currentX = 0;
+    moved = false;
+  });
 }
