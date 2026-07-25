@@ -61,7 +61,7 @@ right:20px;
     border: none;
     border-radius: 50%;
 
-    background: #007AFF;
+    background: #AABDFF;
     color: white;
 
     display: flex;
@@ -188,4 +188,14 @@ header{
 .hidden{
 
     display:none;
+}
+
+.botonera button.selected{
+    background: #AABDFF;
+    color: white;
+    box-shadow: 0 6px 18px rgba(0,122,255,.25);
+}
+
+.botonera button:not(.selected){
+    opacity: .75;
 }

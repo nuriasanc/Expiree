@@ -72,3 +72,15 @@
 
     color:#FF3B30;
 }
+
+.dias{
+    display: flex;
+    align-items: center;
+    gap: 0.5vh;
+}
+
+.estado{
+    cursor:pointer;
+    user-select:none;
+    transition:.2s;
+}

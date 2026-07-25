@@ -42,7 +42,7 @@ async function addItem() {
     abierto: false
   });
 
-  closeModal();
+  cerrarModal();
 
   nombre.value = "";
   fecha.value = "";
@@ -71,11 +71,11 @@ function toggleMenu(){
 }
 
 
-function openModal() {
+function abrirModal() {
   document.getElementById("modal").classList.remove("hidden");
 }
 
-function closeModal() {
+function cerrarModal() {
   document.getElementById("modal").classList.add("hidden");
   clearModal();
 }
@@ -89,7 +89,6 @@ function clearModal() {
   document.getElementById("cantidad").innerText = 1;
 
   document.querySelectorAll(".cat").forEach(c => c.classList.remove("selected"));
-  document.getElementById("modalError").innerText = "";
 }
 
 
@@ -123,7 +122,7 @@ function addSwipe(wrapper, itemId) {
 
     if (currentX < 0) {
       card.style.transform = `translateX(${currentX}px)`;
-      bg.style.background = "#ff3b30";
+      bg.style.background = "#E98688";
       bg.innerText = "Eliminar";
       bg.style.opacity = Math.min(Math.abs(currentX) / 120, 1);
     }
@@ -136,7 +135,7 @@ function addSwipe(wrapper, itemId) {
         bg.style.background = "#ff9500";
       } else {
         bg.innerText = "Abrir";
-        bg.style.background = "#34c759";
+        bg.style.background = "#CCEDCE";
       }
 
       bg.style.opacity = Math.min(currentX / 120, 1);

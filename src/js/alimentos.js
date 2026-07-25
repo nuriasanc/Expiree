@@ -14,7 +14,6 @@ function setCat(id) {
 
 window.saveItem = async function () {
 
-  console.log("honla.que tal");
   if (!nombre.value.trim()) return;
   if (!selectedCat) return;
 
@@ -29,7 +28,7 @@ window.saveItem = async function () {
       abierto: false
     }]);
 
-  closeModal();
+  cerrarModal();
   loadItems();
 };
 
@@ -37,7 +36,7 @@ window.saveItem = async function () {
    LOAD DATA
 ========================= */
 
-async function loadItems() {
+window.loadItems =  async function ()  {
 
   const { data: itemsData } = await supabaseClient
     .from("items")
@@ -61,44 +60,48 @@ async function loadItems() {
 /* =========================
    ITEM UI
 ========================= */
-
 function createItemElement(item) {
 
-  const wrapper = document.createElement("div");
-  wrapper.className = "swipe-wrapper";
+    const wrapper = document.createElement("div");
+    wrapper.className = "swipe-wrapper";
 
-  const bg = document.createElement("div");
-  bg.className = "swipe-bg";
+    const bg = document.createElement("div");
+    bg.className = "swipe-bg";
 
-  const card = document.createElement("div");
-  card.className = "item";
+    const card = document.createElement("div");
+    card.className = "alimento";
 
-  const fecha = item.fecha_caducidad
-    ? new Date(item.fecha_caducidad).toLocaleDateString()
-    : "Sin fecha";
+    const dias = item.fecha_caducidad
+        ? diasRestantes(item)
+        : "-";
 
-  const meal = meals.find(m => m.item_id === item.id);
+    card.innerHTML = `
+        <div class="alimento-titulo">
+            <h3>${item.nombre}</h3>
+            <span
+    class="estado ${item.abierto ? "abierto" : "cerrado"}"
+ onclick="toggleEstado('${item.id}')">
+    ${item.abierto ? "Abierto" : "Cerrado"}
+</span>
+        </div>
 
-  const mealText = meal
-    ? `📅 ${new Date(meal.fecha).toLocaleDateString("es-ES", { weekday: "short" })}`
-    : "";
+        <div class="alimento-info">
+            <span> ${item.cantidad || 1} unidad${item.cantidad > 1 ? "es" : ""}</span>
+            <div class='dias'>
+            
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days-icon lucide-calendar-days"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+             <span> ${dias} días</span>
+        </div>
+        </div>
+    `;
 
-  card.innerHTML = `
-    <div class="item-name">${item.nombre} (${item.cantidad || 1})</div>
-    <div class="item-date">${fecha}</div>
-    <div class="item-cat">${getCatName(item.contenedor_id)}</div>
-    <div class="item-status">${item.abierto ? "🟢 Abierto" : "🔒 Cerrado"}</div>
-    ${mealText ? `<div class="item-meal">${mealText}</div>` : ""}
-  `;
+    wrapper.appendChild(bg);
+    wrapper.appendChild(card);
 
-  wrapper.appendChild(bg);
-  wrapper.appendChild(card);
+    addSwipe(wrapper, item.id);
 
-  addSwipe(wrapper, item.id);
-
-  return wrapper;
+    return wrapper;
 }
-
 function getCatName(id) {
   if (id === 1) return "Nevera";
   if (id === 2) return "Congelador";
@@ -222,7 +225,7 @@ window.render = function () {
 
     urgentes.forEach(item => {
       const el = createItemElement(item);
-      el.querySelector(".item").style.borderLeft = "4px solid #ff3b30";
+      el.querySelector(".alimento").style.borderLeft = "4px solid #ff3b30";
       lista.appendChild(el);
     });
   }
@@ -294,4 +297,24 @@ function showTab(tabId) {
   if (tabId === "calendarTab") {
     renderCalendar();
   }
+}
+async function toggleEstado(id) {
+
+    const item = items.find(i => i.id === id);
+
+    if (!item) return;
+
+    const { error } = await supabaseClient
+        .from("items")
+        .update({
+            abierto: !item.abierto
+        })
+        .eq("id", id);
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    loadItems();
 }

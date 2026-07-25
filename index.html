@@ -20,21 +20,21 @@
 <body>
 
     <!--LOGIN-->
-  <div id="login" class="hidden">
+    <div id="login" class="hidden">
 
-    <h1>Expiree</h1>
+        <h1>Expiree</h1>
 
-    <input id="email" type="email" placeholder="Correo electrónico">
+        <input id="email" type="email" placeholder="Correo electrónico">
 
-    <input id="password" type="password" placeholder="Contraseña">
+        <input id="password" type="password" placeholder="Contraseña">
 
-    <p id="authError"></p>
+        <p id="authError"></p>
 
-    <button onclick="login()">Entrar</button>
+        <button onclick="login()">Entrar</button>
 
-    <button onclick="signup()">Crear cuenta</button>
+        <button onclick="signup()">Crear cuenta</button>
 
-</div>
+    </div>
 
     <!-- APP -->
     <div id="app" class="hidden">
@@ -44,16 +44,9 @@
             <div class="user-menu">
 
                 <button class="user-btn" onclick="toggleMenu()">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="24"
-                         height="24"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-user">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-user">
 
                         <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                         <circle cx="12" cy="7" r="4" />
@@ -86,9 +79,9 @@
                     <input type="text" placeholder="Alimento" id="nombre">
 
                     <div class="botonera">
-                        <button class="frigo" id="cat1" onclick="setCat(1)">Frigorífico</button>
-                        <button class="conge" id="cat2" onclick="setCat(2)">Congelador</button>
-                        <button class="despe" id="cat3" onclick="setCat(3)">Despensa</button>
+                        <button class="frigo cat" id="cat1" onclick="setCat(1)"> Frigorífico</button>
+                        <button class="conge cat" id="cat2" onclick="setCat(2)">Congelador</button>
+                        <button class="despe cat" id="cat3" onclick="setCat(3)">Despensa</button>
                     </div>
 
                     <div class="botonera-2">
@@ -122,17 +115,8 @@
 
             <div class="pantalla-alimentos">
 
-                <div class="alimento">
+                <div id="lista">
 
-                    <div class="alimento-titulo">
-                        <h3>Salchichas</h3>
-                        <span class="estado cerrado">Cerrado</span>
-                    </div>
-
-                    <div class="alimento-info">
-                        <span>🥩 1 unidad</span>
-                        <span>📅 3 días</span>
-                    </div>
 
                 </div>
 
@@ -155,12 +139,12 @@
 
     <script src="src/js/utils.js"></script>
     <script src="src/js/db.js"></script>
+    <script src="src/js/alimentos.js"></script>
+    <script src="src/js/app.js"></script>
     <script src="src/js/auth.js"></script>
     <script src="src/js/ui.js"></script>
     <script src="src/js/swipe.js"></script>
     <script src="src/js/calendar.js"></script>
-    <script src="src/js/app.js"></script>
-    <script src="src/js/alimentos.js"></script>
 
 </body>
 

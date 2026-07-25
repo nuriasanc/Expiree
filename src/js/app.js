@@ -1,3 +1,11 @@
+window.startApp = function () {
+
+    document.getElementById("login").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+
+    loadItems();
+
+}
 
 async function init() {
 
@@ -18,11 +26,4 @@ async function init() {
 
 init();
 
-function startApp() {
 
-    document.getElementById("login").classList.add("hidden");
-    document.getElementById("app").classList.remove("hidden");
-
-    loadItems();
-
-}

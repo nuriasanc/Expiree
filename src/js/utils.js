@@ -9,3 +9,4 @@ function diasRestantes(item) {
 
   return Math.ceil((new Date(item.fecha_caducidad) - new Date()) / 86400000);
 }
+
