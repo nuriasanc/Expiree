@@ -105,7 +105,7 @@ header{
 
     display:flex;
 
-    justify-content:flex-end;
+    justify-content:space-between;
 
     align-items:center;
 
@@ -118,6 +118,17 @@ header{
     border-bottom:1px solid #eee;
 }
 
+
+.logo{
+
+    margin:0;
+
+    font-size:24px;
+
+    font-weight:700;
+
+    color:#111;
+}
 .user-menu{
 
     position:relative;
