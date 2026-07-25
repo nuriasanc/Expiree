@@ -1,92 +1,66 @@
 function esMovil() {
     return window.matchMedia("(max-width: 768px)").matches;
 }
-
-
-/* =========================
-   SWIPE
-========================= */
-
 function addSwipe(wrapper, itemId) {
-  if (!esMovil()) return;
-  let startX = 0;
-  let currentX = 0;
-  let dragging = false;
 
-  const card = wrapper.querySelector(".item");
-  const bg = wrapper.querySelector(".swipe-bg");
+    if (!esMovil()) return;
 
-  wrapper.addEventListener("touchstart", (e) => {
-    startX = e.touches[0].clientX;
-    dragging = true;
-    card.style.transition = "none";
-  });
+    let startX = 0;
+    let currentX = 0;
+    let dragging = false;
 
-  wrapper.addEventListener("touchmove", (e) => {
+    const card = wrapper.querySelector(".alimento");
+    const bg = wrapper.querySelector(".swipe-bg");
 
-    if (!dragging) return;
+    wrapper.addEventListener("touchstart", (e) => {
 
-    currentX = e.touches[0].clientX - startX;
+        startX = e.touches[0].clientX;
+        dragging = true;
 
-    const item = items.find(i => i.id === itemId);
+        card.style.transition = "none";
+    });
 
-    if (currentX < 0) {
-      card.style.transform = `translateX(${currentX}px)`;
-      bg.style.background = "#ff3b30";
-      bg.innerText = "Eliminar";
-      bg.style.opacity = Math.min(Math.abs(currentX) / 120, 1);
-    }
+    wrapper.addEventListener("touchmove", (e) => {
 
-    if (currentX > 0) {
-      card.style.transform = `translateX(${currentX}px)`;
+        if (!dragging) return;
 
-      if (item.abierto) {
-        bg.innerText = "Cerrar";
-        bg.style.background = "#ff9500";
-      } else {
-        bg.innerText = "Abrir";
-        bg.style.background = "#34c759";
-      }
+        currentX = e.touches[0].clientX - startX;
 
-      bg.style.opacity = Math.min(currentX / 120, 1);
-    }
-  });
+        // Solo permitir deslizar hacia la izquierda
+        if (currentX > 0) return;
 
-  wrapper.addEventListener("touchend", async () => {
+        card.style.transform = `translateX(${currentX}px)`;
 
-    dragging = false;
-    card.style.transition = "transform 0.2s ease";
+        bg.style.background = "#ff3b30";
+        bg.style.opacity = Math.min(Math.abs(currentX) / 120, 1);
+        bg.innerHTML = "Eliminar";
+    });
 
-    const item = items.find(i => i.id === itemId);
+    wrapper.addEventListener("touchend", async () => {
 
-    if (currentX < -120) {
+        dragging = false;
 
-      card.style.transform = "translateX(-100%)";
+        card.style.transition = "transform .2s ease";
 
-      setTimeout(async () => {
-        await deleteItem(itemId);
-        loadItems();
-      }, 200);
+        // Si ha deslizado suficiente, eliminar
+        if (currentX < -120) {
 
-      return;
-    }
+            card.style.transform = "translateX(-120%)";
 
-    if (currentX > 120) {
+            setTimeout(async () => {
 
-      if (item.abierto) {
-        await closeItem(itemId);
-      } else {
-        openOpenModal(itemId);
-      }
+                await deleteItem(itemId);
+                loadItems();
 
-      card.style.transform = "translateX(0)";
-      bg.style.opacity = 0;
-      return;
-    }
+            }, 200);
 
-    card.style.transform = "translateX(0)";
-    bg.style.opacity = 0;
+            return;
+        }
 
-    currentX = 0;
-  });
+        // Volver a la posición original
+        card.style.transform = "translateX(0)";
+        bg.style.opacity = "0";
+
+        currentX = 0;
+    });
 }
