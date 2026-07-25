@@ -3,7 +3,7 @@
   background-color: rgb(255, 219, 252);
   width: 100%;
   position: absolute;
-  top: 95%;
+  top: 91%;
   justify-content: space-around;
   height: 5vh;
   padding: 1vh;
@@ -37,7 +37,7 @@ html, body {
     position: fixed;
 
     right: 30px;
-    bottom: 80px;
+    bottom: 100px;
 
     width: 60px;
     height: 60px;
@@ -67,4 +67,12 @@ html, body {
 
 .button-anadir-alimento:active{
     transform: scale(.95);
+}
+
+.pantalla{
+  height: 86vh;
+  width: 93%;
+  position: absolute;
+  top: 5vh;
+  padding: 2vh;
 }

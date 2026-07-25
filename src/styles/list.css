@@ -1,0 +1,74 @@
+.alimento{
+
+    width:100%;
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:18px;
+
+    margin-bottom:14px;
+
+    box-sizing:border-box;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+
+    transition:.2s;
+}
+
+.alimento-titulo{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:14px;
+}
+
+.alimento h3{
+
+    margin:0;
+
+    font-size:20px;
+
+    color:#111;
+}
+
+.alimento-info{
+
+    display:flex;
+
+    gap:18px;
+
+    color:#666;
+
+    font-size:15px;
+}
+
+.estado{
+
+    padding:5px 12px;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+    font-weight:600;
+}
+
+.estado.cerrado{
+
+    background:#E8F5E9;
+
+    color:#34C759;
+}
+
+.estado.abierto{
+
+    background:#FFEAEA;
+
+    color:#FF3B30;
+}
