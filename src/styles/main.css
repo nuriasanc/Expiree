@@ -226,3 +226,37 @@ header{
     color:#4d4373;
     font-weight:900;
 }
+
+input,
+textarea,
+select{
+
+    appearance:none;
+    -webkit-appearance:none;
+
+    border:2px solid #ddd;
+
+    border-radius:12px;
+
+    outline:none;
+
+    transition:.2s;
+
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+
+    border-color:#4d4373;
+
+    box-shadow:0 0 0 3px rgba(76,175,80,.2);
+
+}
+
+::selection{
+
+    background:#4d4373;
+    color:white;
+
+}
