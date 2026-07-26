@@ -127,19 +127,22 @@
     color:#d94a4a;
 }
 
-#lista, #semanaTab{
-
-    height: calc(100vh - 130px);
+#lista,
+#semanaTab{
+    height: calc(100vh - 150px);
 
     overflow-y: auto;
     overflow-x: hidden;
 
+    padding-bottom: 120px; /* espacio para el menú */
+
+    box-sizing: border-box;
+
     -webkit-overflow-scrolling: touch;
 
-    scrollbar-width: none;      /* Firefox */
-    -ms-overflow-style: none;   /* IE y Edge antiguo */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
-
 #lista::-webkit-scrollbar{
     width: 0;
     height: 0;
