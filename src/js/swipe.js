@@ -1,3 +1,5 @@
+const DELETE_DISTANCE = 180; // antes 120
+
 function esMovil() {
   return window.matchMedia("(max-width: 768px)").matches;
 }
@@ -18,15 +20,15 @@ function addSwipe(wrapper, itemId) {
   const bg = wrapper.querySelector(".swipe-bg");
 
 
-  wrapper.addEventListener("touchstart", (e)=>{
+  wrapper.addEventListener("touchstart", (e) => {
 
     touchTarget = e.target;
 
     // Si toca botones o estado, no editar ni swipe
-    if(
+    if (
       touchTarget.closest(".estado") ||
       touchTarget.closest(".btn-eliminar")
-    ){
+    ) {
       return;
     }
 
@@ -40,44 +42,45 @@ function addSwipe(wrapper, itemId) {
   });
 
 
-  wrapper.addEventListener("touchmove", (e)=>{
+  wrapper.addEventListener("touchmove", (e) => {
 
-    if(!dragging) return;
-
-
-    moved = true;
-
+    if (!dragging) return;
+    if (Math.abs(currentX) > 10) {
+      moved = true;
+    }
 
     currentX = e.touches[0].clientX - startX;
 
 
-    if(currentX > 0) return;
+    if (currentX > 0) return;
 
+    const offset = Math.max(currentX, -140);
 
-    card.style.transform =
-        `translateX(${currentX}px)`;
+    card.style.transform = `translateX(${offset}px)`;
 
 
     bg.style.background = "#d94a4a";
     bg.style.opacity =
-        Math.min(Math.abs(currentX) / 120, 1);
+      Math.min(Math.abs(currentX) / DELETE_DISTANCE, 1);
 
-    bg.innerHTML = "Eliminar";
-
+    bg.innerHTML =
+      Math.abs(currentX) > 80
+        ? "Eliminar"
+        : "";
   });
 
 
-  wrapper.addEventListener("touchend", async ()=>{
+  wrapper.addEventListener("touchend", async () => {
 
 
     // Si venía de un botón no hacemos nada
-    if(
+    if (
       touchTarget &&
       (
         touchTarget.closest(".estado") ||
         touchTarget.closest(".btn-eliminar")
       )
-    ){
+    ) {
       return;
     }
 
@@ -86,11 +89,11 @@ function addSwipe(wrapper, itemId) {
 
 
     card.style.transition =
-        "transform .2s ease";
+      "transform .2s ease";
 
 
     // toque normal -> editar
-    if(!moved){
+    if (!moved) {
 
       abrirEditar(itemId);
 
@@ -99,39 +102,39 @@ function addSwipe(wrapper, itemId) {
 
 
     // deslizar suficiente -> borrar
-if (currentX < -120) {
+    if (currentX < -DELETE_DISTANCE) {
 
-    card.style.transition = "transform .35s ease, opacity .35s ease";
+      card.style.transition = "transform .35s ease, opacity .35s ease";
 
-    card.style.transform = "translateX(-120%) scale(.95)";
-    card.style.opacity = "0";
+      card.style.transform = "translateX(-120%) scale(.95)";
+      card.style.opacity = "0";
 
-    wrapper.style.height = wrapper.offsetHeight + "px";
+      wrapper.style.height = wrapper.offsetHeight + "px";
 
-    setTimeout(() => {
+      setTimeout(() => {
 
         wrapper.style.transition = "height .3s ease, margin .3s ease";
         wrapper.style.height = "0px";
         wrapper.style.marginBottom = "0px";
 
-    }, 250);
+      }, 250);
 
 
-    setTimeout(async () => {
+      setTimeout(async () => {
 
         await deleteItem(itemId);
         loadItems();
 
-    }, 550);
+      }, 550);
 
-    return;
-}
+      return;
+    }
 
 
     // volver
     card.style.transform = "translateX(0)";
     bg.style.opacity = 0;
-
+    bg.innerHTML = "";
 
     currentX = 0;
     moved = false;
