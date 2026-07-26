@@ -35,7 +35,7 @@ right:20px;
     border: none;
     border-radius: 50%;
 
-    background: #007AFF;
+    background: #4d4373;
     color: white;
 
     display: flex;
@@ -176,13 +176,9 @@ header{
 }
 
 .botonera button.selected{
-    background: #007AFF;
+    background: #4d4373;
     color: white;
     box-shadow: 0 6px 18px rgba(0,122,255,.25);
-}
-
-.botonera button:not(.selected){
-    opacity: .75;
 }
 
 .swipe-wrapper{
@@ -227,6 +223,6 @@ header{
 }
 
 .nav-footer span.active{
-    color:#27ae60;
+    color:#4d4373;
     font-weight:900;
 }

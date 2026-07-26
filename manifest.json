@@ -4,7 +4,7 @@
   "start_url": ".",
   "display": "standalone",
   "background_color": "#f2f2f7",
-  "theme_color": "#007aff",
+  "theme_color": "#4d4373",
   "description": "Controla lo que tienes en la despensa y evita que caduque",
   "icons": [
     {

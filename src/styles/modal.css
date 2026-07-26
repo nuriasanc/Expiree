@@ -126,7 +126,7 @@
 .modal-anadir-alimentos input:focus,
 .modal-anadir-alimentos select:focus{
 
-    border-color:#007AFF;
+    border-color:#4d4373;
     background:#fff;
 }
 
@@ -175,17 +175,17 @@
 
 .botonera button:nth-child(1){
 
-    background:#020659;
+    background:#6bb3f2;
 }
 
 .botonera button:nth-child(2){
 
-    background:#BF0413;
+    background:#acd7f2;
 }
 
 .botonera button:nth-child(3){
 
-    background:#F2CB05;
+    background:#f29966;
 }
 
 /* ===========================
@@ -212,7 +212,7 @@
 
     border-radius:18px;
 
-    background:#007AFF;
+    background:#4d4373;
 
     color:white;
 
@@ -223,11 +223,6 @@
     cursor:pointer;
 
     transition:.2s;
-}
-
-.addBtn:hover{
-
-    background:#0069dd;
 }
 
 /* ===========================

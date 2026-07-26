@@ -326,7 +326,7 @@ window.render = function () {
 
     const titulo = document.createElement("h3");
     titulo.innerText = "Caducan pronto";
-    titulo.style.color = "#ff3b30";
+    titulo.style.color = "#d94a4a";
 
     lista.appendChild(titulo);
 

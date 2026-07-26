@@ -52,7 +52,7 @@
     border:none;
     border-radius:16px;
 
-    background:#007AFF;
+    background:#4d4373;
     color:white;
 
     font-size:17px;
@@ -63,10 +63,6 @@
     transition:.2s;
 }
 
-#login button:hover{
-    background:#0067dd;
-}
-
 #login button:active{
     transform:scale(.98);
 }
@@ -75,7 +71,7 @@
     width:100%;
     max-width:360px;
 
-    color:#ff3b30;
+    color:#d94a4a;
 
     font-size:14px;
 

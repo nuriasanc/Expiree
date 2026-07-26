@@ -58,7 +58,7 @@ function addSwipe(wrapper, itemId) {
         `translateX(${currentX}px)`;
 
 
-    bg.style.background = "#ff3b30";
+    bg.style.background = "#d94a4a";
     bg.style.opacity =
         Math.min(Math.abs(currentX) / 120, 1);
 
