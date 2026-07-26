@@ -88,66 +88,63 @@ function createItemElement(item) {
     ? diasRestantes(item)
     : "-";
 
-  card.innerHTML = `
-        <div class="alimento-titulo">
-            <h3>${item.nombre}</h3>
+card.innerHTML = `
+    <div class="alimento-titulo">
+        <h3>${item.nombre}</h3>
 
-            <div class="acciones-alimento">
+        <div class="acciones-alimento">
 
+            ${getPrimerDiaComida(item.id)
+                ? `
+                    <span class="badge-comida">
+                        ${getPrimerDiaComida(item.id)}
+                    </span>
+                  `
+                : ""
+            }
 
-${getPrimerDiaComida(item.id)
-      ?
-      `
-    <span class="badge-comida">
-        ${getPrimerDiaComida(item.id)}
-    </span>
+            <span
+                class="estado ${item.abierto ? "abierto" : "cerrado"}"
+                onclick="event.stopPropagation(); toggleEstado('${item.id}')">
+                ${item.abierto ? "Abierto" : "Cerrado"}
+            </span>
 
-<span
- class="estado ${item.abierto ? "abierto" : "cerrado"}"
- onclick="event.stopPropagation(); toggleEstado('${item.id}')">
- ${item.abierto ? "Abierto" : "Cerrado"}
-</span>
-    `
-      :
-      ""
-    }
+            ${!esMovil() ? `
+                <button
+                    class="btn-eliminar"
+                    onclick="event.stopPropagation(); eliminarItem('${item.id}')">
+                    x
+                </button>
+            ` : ""}
 
-                ${!esMovil() ? `
-                    <button 
-    class="btn-eliminar" 
-    onclick="event.stopPropagation(); eliminarItem('${item.id}')">
-    x
-</button>
-                ` : ""}
-
-            </div>
         </div>
+    </div>
 
-        <div class="alimento-info">
-            <span>${item.cantidad || 1} unidad${item.cantidad > 1 ? "es" : ""}</span>
+    <div class="alimento-info">
+        <span>${item.cantidad || 1} unidad${item.cantidad > 1 ? "es" : ""}</span>
 
-            <div class="dias">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="lucide lucide-calendar-days">
-                    <path d="M8 2v4"/>
-                    <path d="M16 2v4"/>
-                    <rect width="18" height="18" x="3" y="4" rx="2"/>
-                    <path d="M3 10h18"/>
-                    <path d="M8 14h.01"/>
-                    <path d="M12 14h.01"/>
-                    <path d="M16 14h.01"/>
-                    <path d="M8 18h.01"/>
-                    <path d="M12 18h.01"/>
-                    <path d="M16 18h.01"/>
-                </svg>
+        <div class="dias">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-calendar-days">
+                <path d="M8 2v4"/>
+                <path d="M16 2v4"/>
+                <rect width="18" height="18" x="3" y="4" rx="2"/>
+                <path d="M3 10h18"/>
+                <path d="M8 14h.01"/>
+                <path d="M12 14h.01"/>
+                <path d="M16 14h.01"/>
+                <path d="M8 18h.01"/>
+                <path d="M12 18h.01"/>
+                <path d="M16 18h.01"/>
+            </svg>
 
-                <span>${dias} días</span>
-            </div>
+            <span>${dias} días</span>
         </div>
-    `;
+    </div>
+`;
 
   wrapper.appendChild(bg);
   wrapper.appendChild(card);
