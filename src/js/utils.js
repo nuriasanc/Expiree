@@ -12,4 +12,3 @@ function diasRestantes(item) {
 function normalizarFecha(fecha){
     return new Date(fecha).toLocaleDateString("en-CA");
 }
-

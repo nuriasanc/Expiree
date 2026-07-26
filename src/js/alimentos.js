@@ -361,6 +361,16 @@ function closeMealModal() {
    RENDER
 ========================= */
 
+function ordenarPorCaducidad(a, b) {
+
+    // Sin fecha siempre al final
+    if (!a.fecha_caducidad && !b.fecha_caducidad) return 0;
+    if (!a.fecha_caducidad) return 1;
+    if (!b.fecha_caducidad) return -1;
+
+    return new Date(a.fecha_caducidad) - new Date(b.fecha_caducidad);
+}
+
 window.render = function () {
 
   const lista = document.getElementById("lista");
@@ -369,7 +379,7 @@ window.render = function () {
   // 🔴 URGENTES
   const urgentes = items
     .filter(i => i.fecha_caducidad && diasRestantes(i) <= 4)
-    .sort((a, b) => new Date(a.fecha_caducidad) - new Date(b.fecha_caducidad));
+    .sort(ordenarPorCaducidad);
 
   if (urgentes.length) {
 
@@ -393,7 +403,7 @@ window.render = function () {
 
     const grupo = items
       .filter(i => i.contenedor_id === cat && !urgentes.includes(i))
-      .sort((a, b) => new Date(a.fecha_caducidad || 999999999) - new Date(b.fecha_caducidad || 999999999));
+      .sort(ordenarPorCaducidad);
 
     if (!grupo.length) return;
 
